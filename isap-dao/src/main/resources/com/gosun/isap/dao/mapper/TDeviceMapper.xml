@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.TDeviceMapper" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.TDevice" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="plat_id" property="platId" jdbcType="BIGINT" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="dev_type" property="devType" jdbcType="INTEGER" />
+    <result column="channel_type" property="channelType" jdbcType="INTEGER" />
+    <result column="channel_sub_type" property="channelSubType" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="net_status" property="netStatus" jdbcType="TINYINT" />
+    <result column="parent" property="parent" jdbcType="CHAR" />
+    <result column="department_id" property="departmentId" jdbcType="CHAR" />
+    <result column="location_x" property="locationX" jdbcType="VARCHAR" />
+    <result column="location_y" property="locationY" jdbcType="VARCHAR" />
+    <result column="brief_name" property="briefName" jdbcType="VARCHAR" />
+    <result column="name_spell" property="nameSpell" jdbcType="CHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, plat_id, code, name, dev_type, channel_type, channel_sub_type, status, net_status, 
+    parent, department_id, location_x, location_y, brief_name, name_spell, description
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.TDeviceExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_device
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_device
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_device
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gosun.isap.dao.po.TDeviceExample" >
+    delete from t_device
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gosun.isap.dao.po.TDevice" >
+    insert into t_device (id, plat_id, code, 
+      name, dev_type, channel_type, 
+      channel_sub_type, status, net_status, 
+      parent, department_id, location_x, 
+      location_y, brief_name, name_spell, 
+      description)
+    values (#{id,jdbcType=CHAR}, #{platId,jdbcType=BIGINT}, #{code,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{devType,jdbcType=INTEGER}, #{channelType,jdbcType=INTEGER}, 
+      #{channelSubType,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{netStatus,jdbcType=TINYINT}, 
+      #{parent,jdbcType=CHAR}, #{departmentId,jdbcType=CHAR}, #{locationX,jdbcType=VARCHAR}, 
+      #{locationY,jdbcType=VARCHAR}, #{briefName,jdbcType=VARCHAR}, #{nameSpell,jdbcType=CHAR}, 
+      #{description,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gosun.isap.dao.po.TDevice" >
+    insert into t_device
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="platId != null" >
+        plat_id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="devType != null" >
+        dev_type,
+      </if>
+      <if test="channelType != null" >
+        channel_type,
+      </if>
+      <if test="channelSubType != null" >
+        channel_sub_type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="netStatus != null" >
+        net_status,
+      </if>
+      <if test="parent != null" >
+        parent,
+      </if>
+      <if test="departmentId != null" >
+        department_id,
+      </if>
+      <if test="locationX != null" >
+        location_x,
+      </if>
+      <if test="locationY != null" >
+        location_y,
+      </if>
+      <if test="briefName != null" >
+        brief_name,
+      </if>
+      <if test="nameSpell != null" >
+        name_spell,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="platId != null" >
+        #{platId,jdbcType=BIGINT},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="devType != null" >
+        #{devType,jdbcType=INTEGER},
+      </if>
+      <if test="channelType != null" >
+        #{channelType,jdbcType=INTEGER},
+      </if>
+      <if test="channelSubType != null" >
+        #{channelSubType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="netStatus != null" >
+        #{netStatus,jdbcType=TINYINT},
+      </if>
+      <if test="parent != null" >
+        #{parent,jdbcType=CHAR},
+      </if>
+      <if test="departmentId != null" >
+        #{departmentId,jdbcType=CHAR},
+      </if>
+      <if test="locationX != null" >
+        #{locationX,jdbcType=VARCHAR},
+      </if>
+      <if test="locationY != null" >
+        #{locationY,jdbcType=VARCHAR},
+      </if>
+      <if test="briefName != null" >
+        #{briefName,jdbcType=VARCHAR},
+      </if>
+      <if test="nameSpell != null" >
+        #{nameSpell,jdbcType=CHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gosun.isap.dao.po.TDeviceExample" resultType="java.lang.Integer" >
+    select count(*) from t_device
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_device
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=CHAR},
+      </if>
+      <if test="record.platId != null" >
+        plat_id = #{record.platId,jdbcType=BIGINT},
+      </if>
+      <if test="record.code != null" >
+        code = #{record.code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.devType != null" >
+        dev_type = #{record.devType,jdbcType=INTEGER},
+      </if>
+      <if test="record.channelType != null" >
+        channel_type = #{record.channelType,jdbcType=INTEGER},
+      </if>
+      <if test="record.channelSubType != null" >
+        channel_sub_type = #{record.channelSubType,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.netStatus != null" >
+        net_status = #{record.netStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.parent != null" >
+        parent = #{record.parent,jdbcType=CHAR},
+      </if>
+      <if test="record.departmentId != null" >
+        department_id = #{record.departmentId,jdbcType=CHAR},
+      </if>
+      <if test="record.locationX != null" >
+        location_x = #{record.locationX,jdbcType=VARCHAR},
+      </if>
+      <if test="record.locationY != null" >
+        location_y = #{record.locationY,jdbcType=VARCHAR},
+      </if>
+      <if test="record.briefName != null" >
+        brief_name = #{record.briefName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nameSpell != null" >
+        name_spell = #{record.nameSpell,jdbcType=CHAR},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_device
+    set id = #{record.id,jdbcType=CHAR},
+      plat_id = #{record.platId,jdbcType=BIGINT},
+      code = #{record.code,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      dev_type = #{record.devType,jdbcType=INTEGER},
+      channel_type = #{record.channelType,jdbcType=INTEGER},
+      channel_sub_type = #{record.channelSubType,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=TINYINT},
+      net_status = #{record.netStatus,jdbcType=TINYINT},
+      parent = #{record.parent,jdbcType=CHAR},
+      department_id = #{record.departmentId,jdbcType=CHAR},
+      location_x = #{record.locationX,jdbcType=VARCHAR},
+      location_y = #{record.locationY,jdbcType=VARCHAR},
+      brief_name = #{record.briefName,jdbcType=VARCHAR},
+      name_spell = #{record.nameSpell,jdbcType=CHAR},
+      description = #{record.description,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gosun.isap.dao.po.TDevice" >
+    update t_device
+    <set >
+      <if test="platId != null" >
+        plat_id = #{platId,jdbcType=BIGINT},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="devType != null" >
+        dev_type = #{devType,jdbcType=INTEGER},
+      </if>
+      <if test="channelType != null" >
+        channel_type = #{channelType,jdbcType=INTEGER},
+      </if>
+      <if test="channelSubType != null" >
+        channel_sub_type = #{channelSubType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="netStatus != null" >
+        net_status = #{netStatus,jdbcType=TINYINT},
+      </if>
+      <if test="parent != null" >
+        parent = #{parent,jdbcType=CHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=CHAR},
+      </if>
+      <if test="locationX != null" >
+        location_x = #{locationX,jdbcType=VARCHAR},
+      </if>
+      <if test="locationY != null" >
+        location_y = #{locationY,jdbcType=VARCHAR},
+      </if>
+      <if test="briefName != null" >
+        brief_name = #{briefName,jdbcType=VARCHAR},
+      </if>
+      <if test="nameSpell != null" >
+        name_spell = #{nameSpell,jdbcType=CHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gosun.isap.dao.po.TDevice" >
+    update t_device
+    set plat_id = #{platId,jdbcType=BIGINT},
+      code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      dev_type = #{devType,jdbcType=INTEGER},
+      channel_type = #{channelType,jdbcType=INTEGER},
+      channel_sub_type = #{channelSubType,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      net_status = #{netStatus,jdbcType=TINYINT},
+      parent = #{parent,jdbcType=CHAR},
+      department_id = #{departmentId,jdbcType=CHAR},
+      location_x = #{locationX,jdbcType=VARCHAR},
+      location_y = #{locationY,jdbcType=VARCHAR},
+      brief_name = #{briefName,jdbcType=VARCHAR},
+      name_spell = #{nameSpell,jdbcType=CHAR},
+      description = #{description,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

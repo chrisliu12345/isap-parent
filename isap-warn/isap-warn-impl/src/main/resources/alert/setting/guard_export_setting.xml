@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<table index="0">
+    <body row="3" column="1">
+        <column>index</column>
+        <column>name</column>
+        <column>phone</column>
+        <column>groupName</column>
+    </body>
+    <template resource="alert/template/guards_info.xls" index="0"/>
+    <style>
+        <date>yyyy-MM-dd</date>
+    </style>
+</table>
+

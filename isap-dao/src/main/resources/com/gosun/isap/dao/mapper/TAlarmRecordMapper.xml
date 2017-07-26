@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.TAlarmRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.TAlarmRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="dev_id" property="devId" jdbcType="CHAR" />
+    <result column="alarm_type" property="alarmType" jdbcType="BIGINT" />
+    <result column="flag" property="flag" jdbcType="TINYINT" />
+    <result column="alarm_level" property="alarmLevel" jdbcType="TINYINT" />
+    <result column="alarm_time" property="alarmTime" jdbcType="TIMESTAMP" />
+    <result column="alarm_data" property="alarmData" jdbcType="VARCHAR" />
+    <result column="confirm" property="confirm" jdbcType="TINYINT" />
+    <result column="check_user" property="checkUser" jdbcType="VARCHAR" />
+    <result column="check_time" property="checkTime" jdbcType="TIMESTAMP" />
+    <result column="suggestion" property="suggestion" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, dev_id, alarm_type, flag, alarm_level, alarm_time, alarm_data, confirm, check_user, 
+    check_time, suggestion
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.TAlarmRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_alarm_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_alarm_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_alarm_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gosun.isap.dao.po.TAlarmRecordExample" >
+    delete from t_alarm_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gosun.isap.dao.po.TAlarmRecord" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_alarm_record (dev_id, alarm_type, flag, 
+      alarm_level, alarm_time, alarm_data, 
+      confirm, check_user, check_time, 
+      suggestion)
+    values (#{devId,jdbcType=CHAR}, #{alarmType,jdbcType=BIGINT}, #{flag,jdbcType=TINYINT}, 
+      #{alarmLevel,jdbcType=TINYINT}, #{alarmTime,jdbcType=TIMESTAMP}, #{alarmData,jdbcType=VARCHAR}, 
+      #{confirm,jdbcType=TINYINT}, #{checkUser,jdbcType=VARCHAR}, #{checkTime,jdbcType=TIMESTAMP}, 
+      #{suggestion,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gosun.isap.dao.po.TAlarmRecord" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_alarm_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="devId != null" >
+        dev_id,
+      </if>
+      <if test="alarmType != null" >
+        alarm_type,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="alarmLevel != null" >
+        alarm_level,
+      </if>
+      <if test="alarmTime != null" >
+        alarm_time,
+      </if>
+      <if test="alarmData != null" >
+        alarm_data,
+      </if>
+      <if test="confirm != null" >
+        confirm,
+      </if>
+      <if test="checkUser != null" >
+        check_user,
+      </if>
+      <if test="checkTime != null" >
+        check_time,
+      </if>
+      <if test="suggestion != null" >
+        suggestion,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="devId != null" >
+        #{devId,jdbcType=CHAR},
+      </if>
+      <if test="alarmType != null" >
+        #{alarmType,jdbcType=BIGINT},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=TINYINT},
+      </if>
+      <if test="alarmLevel != null" >
+        #{alarmLevel,jdbcType=TINYINT},
+      </if>
+      <if test="alarmTime != null" >
+        #{alarmTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="alarmData != null" >
+        #{alarmData,jdbcType=VARCHAR},
+      </if>
+      <if test="confirm != null" >
+        #{confirm,jdbcType=TINYINT},
+      </if>
+      <if test="checkUser != null" >
+        #{checkUser,jdbcType=VARCHAR},
+      </if>
+      <if test="checkTime != null" >
+        #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="suggestion != null" >
+        #{suggestion,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gosun.isap.dao.po.TAlarmRecordExample" resultType="java.lang.Integer" >
+    select count(*) from t_alarm_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_alarm_record
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.devId != null" >
+        dev_id = #{record.devId,jdbcType=CHAR},
+      </if>
+      <if test="record.alarmType != null" >
+        alarm_type = #{record.alarmType,jdbcType=BIGINT},
+      </if>
+      <if test="record.flag != null" >
+        flag = #{record.flag,jdbcType=TINYINT},
+      </if>
+      <if test="record.alarmLevel != null" >
+        alarm_level = #{record.alarmLevel,jdbcType=TINYINT},
+      </if>
+      <if test="record.alarmTime != null" >
+        alarm_time = #{record.alarmTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.alarmData != null" >
+        alarm_data = #{record.alarmData,jdbcType=VARCHAR},
+      </if>
+      <if test="record.confirm != null" >
+        confirm = #{record.confirm,jdbcType=TINYINT},
+      </if>
+      <if test="record.checkUser != null" >
+        check_user = #{record.checkUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkTime != null" >
+        check_time = #{record.checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.suggestion != null" >
+        suggestion = #{record.suggestion,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_alarm_record
+    set id = #{record.id,jdbcType=BIGINT},
+      dev_id = #{record.devId,jdbcType=CHAR},
+      alarm_type = #{record.alarmType,jdbcType=BIGINT},
+      flag = #{record.flag,jdbcType=TINYINT},
+      alarm_level = #{record.alarmLevel,jdbcType=TINYINT},
+      alarm_time = #{record.alarmTime,jdbcType=TIMESTAMP},
+      alarm_data = #{record.alarmData,jdbcType=VARCHAR},
+      confirm = #{record.confirm,jdbcType=TINYINT},
+      check_user = #{record.checkUser,jdbcType=VARCHAR},
+      check_time = #{record.checkTime,jdbcType=TIMESTAMP},
+      suggestion = #{record.suggestion,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gosun.isap.dao.po.TAlarmRecord" >
+    update t_alarm_record
+    <set >
+      <if test="devId != null" >
+        dev_id = #{devId,jdbcType=CHAR},
+      </if>
+      <if test="alarmType != null" >
+        alarm_type = #{alarmType,jdbcType=BIGINT},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=TINYINT},
+      </if>
+      <if test="alarmLevel != null" >
+        alarm_level = #{alarmLevel,jdbcType=TINYINT},
+      </if>
+      <if test="alarmTime != null" >
+        alarm_time = #{alarmTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="alarmData != null" >
+        alarm_data = #{alarmData,jdbcType=VARCHAR},
+      </if>
+      <if test="confirm != null" >
+        confirm = #{confirm,jdbcType=TINYINT},
+      </if>
+      <if test="checkUser != null" >
+        check_user = #{checkUser,jdbcType=VARCHAR},
+      </if>
+      <if test="checkTime != null" >
+        check_time = #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="suggestion != null" >
+        suggestion = #{suggestion,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gosun.isap.dao.po.TAlarmRecord" >
+    update t_alarm_record
+    set dev_id = #{devId,jdbcType=CHAR},
+      alarm_type = #{alarmType,jdbcType=BIGINT},
+      flag = #{flag,jdbcType=TINYINT},
+      alarm_level = #{alarmLevel,jdbcType=TINYINT},
+      alarm_time = #{alarmTime,jdbcType=TIMESTAMP},
+      alarm_data = #{alarmData,jdbcType=VARCHAR},
+      confirm = #{confirm,jdbcType=TINYINT},
+      check_user = #{checkUser,jdbcType=VARCHAR},
+      check_time = #{checkTime,jdbcType=TIMESTAMP},
+      suggestion = #{suggestion,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

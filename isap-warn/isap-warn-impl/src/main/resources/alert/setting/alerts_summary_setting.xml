@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<table index="0">
+    <body row="4" column="1">
+        <column>areaName</column>
+        <column>communityName</column>
+        <column>total</column>
+        <column>guardProcessed</column>
+        <column>abnormalAlerts</column>
+        <column>suspectAlerts</column>
+        <column>guardOverTime</column>
+        <column>questionSuspect</column>
+        <column>callbackAgain</column>
+        <column>failedAlerts</column>
+        <column>halfDeviceOffline</column>
+        <column>noGuards</column>
+        <column>otherFailedReason</column>
+        <column>guardType</column>
+        <column>visitCount</column>
+        <column>patrolCount</column>
+        <column>guardCount</column>
+        <column>camera</column>
+    </body>
+    <template resource="alert/template/alerts_summary_template.xls" index="0"/>
+    <style>
+        <date>yyyy-MM-dd</date>
+    </style>
+</table>
+

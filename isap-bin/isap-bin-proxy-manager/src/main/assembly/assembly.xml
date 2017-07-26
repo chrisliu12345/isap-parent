@@ -1,0 +1,26 @@
+<assembly>
+	<id>bin</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<fileSets>
+		<!-- bin -->
+		<fileSet>
+			<directory>${project.build.directory}/bin</directory>
+			<outputDirectory>/bin</outputDirectory>
+		</fileSet>
+		<!-- conf -->
+		<fileSet>
+			<directory>${project.build.directory}/conf</directory>
+			<outputDirectory>/conf</outputDirectory>
+		</fileSet>
+	</fileSets>
+	<!-- copy dependencies -->
+	<dependencySets>
+		<dependencySet>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputDirectory>lib</outputDirectory>
+			<scope>runtime</scope>
+		</dependencySet>
+	</dependencySets>
+</assembly>

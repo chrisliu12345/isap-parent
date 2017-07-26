@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.TGuardSingleTimeMapper" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.TGuardSingleTime" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="template_id" property="templateId" jdbcType="BIGINT" />
+    <result column="begin_time1" property="beginTime1" jdbcType="TIMESTAMP" />
+    <result column="end_time1" property="endTime1" jdbcType="TIMESTAMP" />
+    <result column="begin_time2" property="beginTime2" jdbcType="TIMESTAMP" />
+    <result column="end_time2" property="endTime2" jdbcType="TIMESTAMP" />
+    <result column="begin_time3" property="beginTime3" jdbcType="TIMESTAMP" />
+    <result column="end_time3" property="endTime3" jdbcType="TIMESTAMP" />
+    <result column="begin_time4" property="beginTime4" jdbcType="TIMESTAMP" />
+    <result column="end_time4" property="endTime4" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, template_id, begin_time1, end_time1, begin_time2, end_time2, begin_time3, end_time3, 
+    begin_time4, end_time4
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.TGuardSingleTimeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_guard_single_time
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_guard_single_time
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_guard_single_time
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gosun.isap.dao.po.TGuardSingleTimeExample" >
+    delete from t_guard_single_time
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gosun.isap.dao.po.TGuardSingleTime" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_guard_single_time (template_id, begin_time1, end_time1, 
+      begin_time2, end_time2, begin_time3, 
+      end_time3, begin_time4, end_time4
+      )
+    values (#{templateId,jdbcType=BIGINT}, #{beginTime1,jdbcType=TIMESTAMP}, #{endTime1,jdbcType=TIMESTAMP}, 
+      #{beginTime2,jdbcType=TIMESTAMP}, #{endTime2,jdbcType=TIMESTAMP}, #{beginTime3,jdbcType=TIMESTAMP}, 
+      #{endTime3,jdbcType=TIMESTAMP}, #{beginTime4,jdbcType=TIMESTAMP}, #{endTime4,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.gosun.isap.dao.po.TGuardSingleTime" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_guard_single_time
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="templateId != null" >
+        template_id,
+      </if>
+      <if test="beginTime1 != null" >
+        begin_time1,
+      </if>
+      <if test="endTime1 != null" >
+        end_time1,
+      </if>
+      <if test="beginTime2 != null" >
+        begin_time2,
+      </if>
+      <if test="endTime2 != null" >
+        end_time2,
+      </if>
+      <if test="beginTime3 != null" >
+        begin_time3,
+      </if>
+      <if test="endTime3 != null" >
+        end_time3,
+      </if>
+      <if test="beginTime4 != null" >
+        begin_time4,
+      </if>
+      <if test="endTime4 != null" >
+        end_time4,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="templateId != null" >
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="beginTime1 != null" >
+        #{beginTime1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime1 != null" >
+        #{endTime1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime2 != null" >
+        #{beginTime2,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime2 != null" >
+        #{endTime2,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime3 != null" >
+        #{beginTime3,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime3 != null" >
+        #{endTime3,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime4 != null" >
+        #{beginTime4,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime4 != null" >
+        #{endTime4,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gosun.isap.dao.po.TGuardSingleTimeExample" resultType="java.lang.Integer" >
+    select count(*) from t_guard_single_time
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_guard_single_time
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.templateId != null" >
+        template_id = #{record.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="record.beginTime1 != null" >
+        begin_time1 = #{record.beginTime1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime1 != null" >
+        end_time1 = #{record.endTime1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.beginTime2 != null" >
+        begin_time2 = #{record.beginTime2,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime2 != null" >
+        end_time2 = #{record.endTime2,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.beginTime3 != null" >
+        begin_time3 = #{record.beginTime3,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime3 != null" >
+        end_time3 = #{record.endTime3,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.beginTime4 != null" >
+        begin_time4 = #{record.beginTime4,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime4 != null" >
+        end_time4 = #{record.endTime4,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_guard_single_time
+    set id = #{record.id,jdbcType=BIGINT},
+      template_id = #{record.templateId,jdbcType=BIGINT},
+      begin_time1 = #{record.beginTime1,jdbcType=TIMESTAMP},
+      end_time1 = #{record.endTime1,jdbcType=TIMESTAMP},
+      begin_time2 = #{record.beginTime2,jdbcType=TIMESTAMP},
+      end_time2 = #{record.endTime2,jdbcType=TIMESTAMP},
+      begin_time3 = #{record.beginTime3,jdbcType=TIMESTAMP},
+      end_time3 = #{record.endTime3,jdbcType=TIMESTAMP},
+      begin_time4 = #{record.beginTime4,jdbcType=TIMESTAMP},
+      end_time4 = #{record.endTime4,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gosun.isap.dao.po.TGuardSingleTime" >
+    update t_guard_single_time
+    <set >
+      <if test="templateId != null" >
+        template_id = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="beginTime1 != null" >
+        begin_time1 = #{beginTime1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime1 != null" >
+        end_time1 = #{endTime1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime2 != null" >
+        begin_time2 = #{beginTime2,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime2 != null" >
+        end_time2 = #{endTime2,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime3 != null" >
+        begin_time3 = #{beginTime3,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime3 != null" >
+        end_time3 = #{endTime3,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime4 != null" >
+        begin_time4 = #{beginTime4,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime4 != null" >
+        end_time4 = #{endTime4,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gosun.isap.dao.po.TGuardSingleTime" >
+    update t_guard_single_time
+    set template_id = #{templateId,jdbcType=BIGINT},
+      begin_time1 = #{beginTime1,jdbcType=TIMESTAMP},
+      end_time1 = #{endTime1,jdbcType=TIMESTAMP},
+      begin_time2 = #{beginTime2,jdbcType=TIMESTAMP},
+      end_time2 = #{endTime2,jdbcType=TIMESTAMP},
+      begin_time3 = #{beginTime3,jdbcType=TIMESTAMP},
+      end_time3 = #{endTime3,jdbcType=TIMESTAMP},
+      begin_time4 = #{beginTime4,jdbcType=TIMESTAMP},
+      end_time4 = #{endTime4,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

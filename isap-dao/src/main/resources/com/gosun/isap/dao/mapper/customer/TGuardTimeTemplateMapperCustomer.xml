@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.customer.TGuardTimeTemplateMapperCustomer" >
+	<update id="increaseRefCount" parameterType="java.lang.Long">
+		update
+		t_guard_time_template
+		set ref_count = ref_count +1
+		where id =
+		#{id,jdbcType=BIGINT}
+	</update>
+
+	<update id="decreaseRefCount" parameterType="java.lang.Long">
+		update
+		t_guard_time_template
+		set ref_count = ref_count -1
+		where id =
+		#{id,jdbcType=BIGINT}
+	</update>
+	
+	<select id="getRefCount" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+	    select ref_count
+	    from t_guard_time_template
+	    where id = #{id,jdbcType=BIGINT}
+	</select>
+</mapper>

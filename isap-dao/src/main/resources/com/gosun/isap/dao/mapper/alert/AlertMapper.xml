@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gosun.isap.dao.mapper.alert.AlertMapper">
+    <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.alert.Alert">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="reason" jdbcType="TINYINT" property="reason"/>
+        <result column="dev_id" jdbcType="CHAR" property="devId"/>
+        <result column="department_id" jdbcType="CHAR" property="departmentId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="is_over_time" jdbcType="BIT" property="isOverTime"/>
+        <result column="alert_type" jdbcType="TINYINT" property="alertType"/>
+        <result column="unprocessed_alerts" jdbcType="INTEGER" property="unprocessedAlerts"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="confirm_start_time" jdbcType="TIMESTAMP" property="confirmStartTime"/>
+        <result column="confirm_end_time" jdbcType="TIMESTAMP" property="confirmEndTime"/>
+        <result column="confirm_time" jdbcType="INTEGER" property="confirmTime"/>
+        <result column="confirmed_alerts" jdbcType="INTEGER" property="confirmedAlerts"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="confirm_desc" jdbcType="VARCHAR" property="confirmDesc"/>
+        <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime"/>
+        <result column="device_name" jdbcType="VARCHAR" property="deviceName"/>
+        <result column="device_brief_name" jdbcType="VARCHAR" property="deviceBriefName"/>
+        <result column="device_name_spell" jdbcType="VARCHAR" property="deviceNameSpell"/>
+        <result column="department_name" jdbcType="VARCHAR" property="departmentName"/>
+        <result column="guard_id" jdbcType="VARCHAR" property="guardId"/>
+        <result column="guard_name" jdbcType="VARCHAR" property="guardName"/>
+        <result column="guard_phone" jdbcType="VARCHAR" property="guardPhone"/>
+    </resultMap>
+
+    <sql id="SELECT_ALERT">
+        select
+        A.id, A.description,A.reason, A.dev_id, A.department_id, A.status, A.is_over_time, A.alert_type, A.unprocessed_alerts,
+        A.add_time, A.confirm_start_time, A.confirm_end_time, A.confirm_time, A.confirmed_alerts,A.user_id,
+        A.confirm_desc,
+        B.name as device_name,B.brief_name as device_brief_name ,B.name_spell as device_name_spell,
+        C.name as department_name ,
+        E.id as guard_id,E.name as guard_name,E.phone  as guard_phone
+        from t_alert A
+        left join
+        t_device B
+        on A.dev_id = B.id
+        left join
+        t_department C
+        on A.department_id = C.id
+        left join
+        t_guard_alert D
+        on A.id = D.alert_id
+        left join
+        t_guard E
+        on D.guard_id = E.id
+    </sql>
+    <sql id="SELECT_ALERT_COUNT">
+        select count(*) from t_alert A
+    </sql>
+    <sql id="SELECT_ALERT_UNPROCESSED">
+        select
+        A.id, A.description, A.dev_id, A.department_id, A.status, A.is_over_time, A.alert_type,
+        A.unprocessed_alerts,A.add_time,
+        B.name as device_name,B.brief_name as device_brief_name ,B.name_spell as device_name_spell,
+        C.name as department_name from t_alert A
+        left join
+        t_device B
+        on A.dev_id = B.id
+        left join
+        t_department C
+        on A.department_id = C.id
+    </sql>
+
+    <update id="updateStatus">
+        update t_alert set status = #{status} where id = #{id}
+    </update>
+    <update id="updateStatusAndFinishTime">
+        update t_alert set status = #{status},finish_time=#{finishTime} where id = #{id}
+    </update>
+    <select id="getAlertLogReferenceId" resultType="java.lang.Long">
+        select reference_id from t_alert_log where alert_id = #{alertId} and log_type = #{type}
+    </select>
+    <select id="selectAlertById" resultMap="BaseResultMap">
+        <include refid="SELECT_ALERT"/>
+        where A.id = #{id}
+    </select>
+    <select id="latestProcessedTime" resultType="java.util.Date">
+        select confirm_end_time from t_alert where department_id = #{departmentId} order by confirm_end_time desc limit
+        1
+    </select>
+
+    <select id="listUnprocessedAlerts" resultMap="BaseResultMap">
+        <include refid="SELECT_ALERT_UNPROCESSED"/>
+        <where>
+            A.status = 0
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and A.department_id in
+                <foreach collection="departmentIds" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by add_time desc
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+    <select id="countUnprocessedAlerts" resultType="int">
+        select count(*) from t_alert
+        <where>
+            status = 0
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentIds" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <update id="updateAlertsAsOverTime">
+        update t_alert
+        set status = 30,is_over_time=1
+        <where>
+            status = 0
+            <if test="end == null">
+                and false
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+    </update>
+    <select id="listAlertsByStatusAndDeps" resultMap="BaseResultMap">
+        <include refid="SELECT_ALERT"/>
+        <where>
+            <if test="status != null">
+                A.status = #{status}
+            </if>
+
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and A.department_id in
+                <foreach collection="departmentIds" open="(" separator="," close=")" item="id" index="index">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+        <if test="orderBy != null and orderBy.size() &gt; 0">
+            order by
+            <foreach collection="orderBy" separator="," item="column">
+                A.${column}
+            </foreach>
+        </if>
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+    <select id="countAlertsByStatusAndDeps" resultType="int">
+        <include refid="SELECT_ALERT_COUNT"/>
+        <where>
+            <if test="status != null">
+                A.status = #{status}
+            </if>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and A.department_id in
+                <foreach collection="departmentIds" open="(" separator="," close=")" item="id" index="index">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+
+    <select id="listAlertsByStatusAndUserId" resultMap="BaseResultMap">
+        <include refid="SELECT_ALERT"/>
+        <where>
+            A.status = #{status} and A.user_id = #{userId}
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+        <if test="orderBy != null and orderBy.size() &gt; 0">
+            order by
+            <foreach collection="orderBy" separator="," item="column">
+                A.${column}
+            </foreach>
+        </if>
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+    <select id="countAlertsByStatusAndUserId" resultType="int">
+        <include refid="SELECT_ALERT_COUNT"/>
+        <where>
+            A.status = #{status} and A.user_id = #{userId}
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+
+    <select id="listByStatusIntervalAndDeps" resultMap="BaseResultMap">
+        <include refid="SELECT_ALERT"/>
+        <where>
+            <if test="statusInterval != null">
+                <if test="statusInterval.lowerLimit != null">
+                    and A.status &gt; #{statusInterval.lowerLimit}
+                </if>
+                <if test="statusInterval.upperLimit != null">
+                    and A.status &lt; #{statusInterval.upperLimit}
+                </if>
+            </if>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and A.department_id in
+                <foreach collection="departmentIds" open="(" separator="," close=")" item="id" index="index">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+        <if test="orderBy != null and orderBy.size() &gt; 0">
+            order by
+            <foreach collection="orderBy" separator="," item="column">
+                A.${column}
+            </foreach>
+        </if>
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+    <select id="countByStatusIntervalAndDeps" resultType="int">
+        <include refid="SELECT_ALERT_COUNT"/>
+        <where>
+            <if test="statusInterval != null">
+                <if test="statusInterval.lowerLimit != null">
+                    and A.status &gt; #{statusInterval.lowerLimit}
+                </if>
+                <if test="statusInterval.upperLimit != null">
+                    and A.status &lt; #{statusInterval.upperLimit}
+                </if>
+            </if>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and A.department_id in
+                <foreach collection="departmentIds" open="(" separator="," close=")" item="id" index="index">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+
+    <select id="listByStatusIntervalAndUserId" resultMap="BaseResultMap">
+        <include refid="SELECT_ALERT"/>
+        <where>
+            A.user_id = #{userId}
+            <if test="statusInterval != null">
+                <if test="statusInterval.lowerLimit != null">
+                    and A.status &gt; #{statusInterval.lowerLimit}
+                </if>
+                <if test="statusInterval.upperLimit != null">
+                    and A.status &lt; #{statusInterval.upperLimit}
+                </if>
+            </if>
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+        <if test="orderBy != null and orderBy.size() &gt; 0">
+            order by
+            <foreach collection="orderBy" separator="," item="column">
+                A.${column}
+            </foreach>
+        </if>
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+    <select id="countByStatusIntervalAndUserId" resultType="int">
+        <include refid="SELECT_ALERT_COUNT"/>
+        <where>
+            A.user_id = #{userId}
+            <if test="statusInterval != null">
+                <if test="statusInterval.lowerLimit != null">
+                    and A.status &gt; #{statusInterval.lowerLimit}
+                </if>
+                <if test="statusInterval.upperLimit != null">
+                    and A.status &lt; #{statusInterval.upperLimit}
+                </if>
+            </if>
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+
+    <select id="listAlertsByDepartments" resultMap="BaseResultMap">
+        <include refid="SELECT_ALERT"/>
+        <where>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and A.department_id in
+                <foreach collection="departmentIds" open="(" separator="," close=")" item="id" index="index">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+        <if test="orderBy != null and orderBy.size() &gt; 0">
+            order by
+            <foreach collection="orderBy" separator="," item="column">
+                A.${column}
+            </foreach>
+        </if>
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+    <select id="countAlertsByDepartments" resultType="int">
+        <include refid="SELECT_ALERT_COUNT"/>
+        <where>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and A.department_id in
+                <foreach collection="departmentIds" open="(" separator="," close=")" item="id" index="index">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+
+    <select id="listAlerts" resultMap="BaseResultMap">
+        <include refid="SELECT_ALERT"/>
+        <if test="ids != null and ids.size() &gt; 0">
+            where A.id in
+            <foreach collection="ids" open="(" separator="," close=")" item="id" index="index">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <resultMap id="ResourceMap" type="com.gosun.isap.dao.po.alert.base.BaseAlertResource">
+        <result column="resource_type" jdbcType="TINYINT" property="resourceType" />
+        <result column="resource_index" jdbcType="TINYINT" property="resourceIndex" />
+    </resultMap>
+    <select id="getResources" resultMap="ResourceMap">
+        select id,resource_type,resource_index from t_alert_resource where alert_id = #{id}
+    </select>
+    <select id="getResourceIndex" resultType="java.lang.Integer">
+        select resource_index from t_alert_resource where alert_id = #{id} and resource_type = #{type} order by resource_index desc limit 1
+    </select>
+    <select id="avgOfConfirmTimeByDeps" resultType="double">
+        select avg(confirm_time) from t_alert
+        <where>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentIds" open="(" separator="," close=")" item="id" index="index">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+    <select id="avgOfUserResponseTimeByDeps" resultType="double">
+        select avg(B.user_response_time) from t_alert A
+        left join
+        t_alert_detail B
+        on A.id = B.alert_id
+        <where>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and A.department_id in
+                <foreach collection="departmentIds" open="(" separator="," close=")" item="id" index="index">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+    <select id="avgOfGuardResponseTimeByDeps" resultType="double">
+        select avg(B.guard_response_time) from t_alert A
+        left join
+        t_alert_detail B
+        on A.id = B.alert_id
+        <where>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and A.department_id in
+                <foreach collection="departmentIds" open="(" separator="," close=")" item="id" index="index">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+    <select id="avgOfUnprocessedByDeps" resultType="double">
+        select avg(unprocessed_alerts) from t_alert
+        <where>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentIds" open="(" separator="," close=")" item="id" index="index">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+    <select id="avgOfConfirmedAlertsByDeps" resultType="double">
+        select avg(B.confirm_alerts) from t_alert A
+        left join
+        t_alert_detail B
+        on A.id = B.alert_id
+        <where>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and A.department_id in
+                <foreach collection="departmentIds" open="(" separator="," close=")" item="id" index="index">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+    <select id="countOfCallbackAgain" resultType="java.lang.Integer">
+        select count(*) from t_alert_detail where alert_id in
+        (select id from t_alert
+        <where>
+            <if test="departmentIds == null or departmentIds.size() == 0">
+                and false
+            </if>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentIds" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>)
+        and is_second_call_back = 1;
+    </select>
+
+
+</mapper>

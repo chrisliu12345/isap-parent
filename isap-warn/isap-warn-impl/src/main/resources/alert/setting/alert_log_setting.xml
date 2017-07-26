@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<table index="0">
+    <header row="1">
+        <cell column="2">date</cell>
+        <cell column="4">userName</cell>
+        <cell column="6">processedCount</cell>
+        <cell column="8">alertsCount</cell>
+        <cell column="10">callbackCount</cell>
+    </header>
+    <body row="3" column="1" max_row="12" handler="com.gosun.isap.warn.impl.alert.export.handler.IndexHandler">
+        <column>index</column>
+        <column date="HH:mm:ss">guardStartingTime</column>
+        <column>whereAndWhat</column>
+        <column>guardInfo</column>
+        <column date="HH:mm:ss">callbackTime</column>
+        <column date="HH:mm:ss">callbackAgainTime</column>
+        <column>isArrived</column>
+        <column>callbackContent</column>
+        <column>isQuestionSuspect</column>
+        <column>isGuardOverTime</column>
+        <column>isFailed</column>
+        <column>failedReason</column>
+    </body>
+    <template resource="alert/template/alert_log_template.docx" index="0"/>
+    <style>
+        <date>yyyy-MM-dd</date>
+    </style>
+</table>
+

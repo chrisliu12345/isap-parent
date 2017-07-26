@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd  
+        http://code.alibabatech.com/schema/dubbo        
+		http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd ">
+	
+	<context:component-scan base-package="com.gosun.isap.proxy.backend"></context:component-scan>
+	
+	<bean id="dubboPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">   
+	    <property name="order" value="1" />   
+	    <property name="ignoreUnresolvablePlaceholders" value="true" />   
+	    <property name="location">
+			<value>classpath:dubbo.properties</value>
+	    </property>
+	</bean>
+	
+	<bean id="connPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">   
+	    <property name="order" value="1" />   
+	    <property name="ignoreUnresolvablePlaceholders" value="true" />   
+	    <property name="location">
+			<value>classpath:conn.properties</value>
+	    </property>
+	</bean>
+	
+	<!--zookeeper客户端-->
+	<bean id="zkClient" class="org.I0Itec.zkclient.ZkClient">
+		<!--zookeeper地址-->
+		<constructor-arg index="0" value="${zookeeperAddress}" />
+		<!--session超时时间-->
+		<constructor-arg index="1" value="10000" />
+		<!--连接超时时间-->
+		<constructor-arg index="2" value="10000" />
+	</bean>
+	
+	<bean id="proxyCache" class="com.gosun.isap.proxy.backend.ProxyCacheImpl"  scope="singleton">
+		<constructor-arg name="registryAddress" value="${dubbo.registry.address}" />
+	</bean>
+	
+	<bean id="managerKeeper" class="com.gosun.isap.proxy.api.utils.support.AbstractWorkerKeeper">
+		<constructor-arg name="keeperHome" value="/isap/manager" />
+		<constructor-arg name="zk" ref="zkClient" />
+	</bean>
+	
+	<bean id="proxyCacheInitiator" class="com.gosun.isap.proxy.backend.ProxyCacheInitiator" scope="singleton">
+		<constructor-arg name="keeper" ref="managerKeeper" />
+	</bean>
+	
+	<dubbo:reference id="proxyManager" interface="com.gosun.isap.proxy.api.manager.IProxyManager" lazy="true"/>
+	
+</beans>

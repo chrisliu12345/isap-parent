@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.TAlertMapper" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.TAlert" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="reason" property="reason" jdbcType="TINYINT" />
+    <result column="dev_id" property="devId" jdbcType="CHAR" />
+    <result column="department_id" property="departmentId" jdbcType="CHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="is_over_time" property="isOverTime" jdbcType="BIT" />
+    <result column="alert_type" property="alertType" jdbcType="TINYINT" />
+    <result column="unprocessed_alerts" property="unprocessedAlerts" jdbcType="INTEGER" />
+    <result column="confirm_start_time" property="confirmStartTime" jdbcType="TIMESTAMP" />
+    <result column="confirm_end_time" property="confirmEndTime" jdbcType="TIMESTAMP" />
+    <result column="confirm_time" property="confirmTime" jdbcType="INTEGER" />
+    <result column="confirmed_alerts" property="confirmedAlerts" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="confirm_desc" property="confirmDesc" jdbcType="VARCHAR" />
+    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, description, reason, dev_id, department_id, status, is_over_time, alert_type, 
+    unprocessed_alerts, confirm_start_time, confirm_end_time, confirm_time, confirmed_alerts, 
+    user_id, confirm_desc, finish_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.TAlertExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_alert
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_alert
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_alert
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gosun.isap.dao.po.TAlertExample" >
+    delete from t_alert
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gosun.isap.dao.po.TAlert" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_alert (description, reason, dev_id, 
+      department_id, status, is_over_time, 
+      alert_type, unprocessed_alerts, confirm_start_time, 
+      confirm_end_time, confirm_time, confirmed_alerts, 
+      user_id, confirm_desc, finish_time
+      )
+    values (#{description,jdbcType=VARCHAR}, #{reason,jdbcType=TINYINT}, #{devId,jdbcType=CHAR}, 
+      #{departmentId,jdbcType=CHAR}, #{status,jdbcType=TINYINT}, #{isOverTime,jdbcType=BIT}, 
+      #{alertType,jdbcType=TINYINT}, #{unprocessedAlerts,jdbcType=INTEGER}, #{confirmStartTime,jdbcType=TIMESTAMP}, 
+      #{confirmEndTime,jdbcType=TIMESTAMP}, #{confirmTime,jdbcType=INTEGER}, #{confirmedAlerts,jdbcType=INTEGER}, 
+      #{userId,jdbcType=BIGINT}, #{confirmDesc,jdbcType=VARCHAR}, #{finishTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.gosun.isap.dao.po.TAlert" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_alert
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="devId != null" >
+        dev_id,
+      </if>
+      <if test="departmentId != null" >
+        department_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="isOverTime != null" >
+        is_over_time,
+      </if>
+      <if test="alertType != null" >
+        alert_type,
+      </if>
+      <if test="unprocessedAlerts != null" >
+        unprocessed_alerts,
+      </if>
+      <if test="confirmStartTime != null" >
+        confirm_start_time,
+      </if>
+      <if test="confirmEndTime != null" >
+        confirm_end_time,
+      </if>
+      <if test="confirmTime != null" >
+        confirm_time,
+      </if>
+      <if test="confirmedAlerts != null" >
+        confirmed_alerts,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="confirmDesc != null" >
+        confirm_desc,
+      </if>
+      <if test="finishTime != null" >
+        finish_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=TINYINT},
+      </if>
+      <if test="devId != null" >
+        #{devId,jdbcType=CHAR},
+      </if>
+      <if test="departmentId != null" >
+        #{departmentId,jdbcType=CHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isOverTime != null" >
+        #{isOverTime,jdbcType=BIT},
+      </if>
+      <if test="alertType != null" >
+        #{alertType,jdbcType=TINYINT},
+      </if>
+      <if test="unprocessedAlerts != null" >
+        #{unprocessedAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="confirmStartTime != null" >
+        #{confirmStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confirmEndTime != null" >
+        #{confirmEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confirmTime != null" >
+        #{confirmTime,jdbcType=INTEGER},
+      </if>
+      <if test="confirmedAlerts != null" >
+        #{confirmedAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="confirmDesc != null" >
+        #{confirmDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTime != null" >
+        #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gosun.isap.dao.po.TAlertExample" resultType="java.lang.Integer" >
+    select count(*) from t_alert
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_alert
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reason != null" >
+        reason = #{record.reason,jdbcType=TINYINT},
+      </if>
+      <if test="record.devId != null" >
+        dev_id = #{record.devId,jdbcType=CHAR},
+      </if>
+      <if test="record.departmentId != null" >
+        department_id = #{record.departmentId,jdbcType=CHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.isOverTime != null" >
+        is_over_time = #{record.isOverTime,jdbcType=BIT},
+      </if>
+      <if test="record.alertType != null" >
+        alert_type = #{record.alertType,jdbcType=TINYINT},
+      </if>
+      <if test="record.unprocessedAlerts != null" >
+        unprocessed_alerts = #{record.unprocessedAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="record.confirmStartTime != null" >
+        confirm_start_time = #{record.confirmStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.confirmEndTime != null" >
+        confirm_end_time = #{record.confirmEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.confirmTime != null" >
+        confirm_time = #{record.confirmTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.confirmedAlerts != null" >
+        confirmed_alerts = #{record.confirmedAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.confirmDesc != null" >
+        confirm_desc = #{record.confirmDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.finishTime != null" >
+        finish_time = #{record.finishTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_alert
+    set id = #{record.id,jdbcType=BIGINT},
+      description = #{record.description,jdbcType=VARCHAR},
+      reason = #{record.reason,jdbcType=TINYINT},
+      dev_id = #{record.devId,jdbcType=CHAR},
+      department_id = #{record.departmentId,jdbcType=CHAR},
+      status = #{record.status,jdbcType=TINYINT},
+      is_over_time = #{record.isOverTime,jdbcType=BIT},
+      alert_type = #{record.alertType,jdbcType=TINYINT},
+      unprocessed_alerts = #{record.unprocessedAlerts,jdbcType=INTEGER},
+      confirm_start_time = #{record.confirmStartTime,jdbcType=TIMESTAMP},
+      confirm_end_time = #{record.confirmEndTime,jdbcType=TIMESTAMP},
+      confirm_time = #{record.confirmTime,jdbcType=INTEGER},
+      confirmed_alerts = #{record.confirmedAlerts,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      confirm_desc = #{record.confirmDesc,jdbcType=VARCHAR},
+      finish_time = #{record.finishTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gosun.isap.dao.po.TAlert" >
+    update t_alert
+    <set >
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=TINYINT},
+      </if>
+      <if test="devId != null" >
+        dev_id = #{devId,jdbcType=CHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=CHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isOverTime != null" >
+        is_over_time = #{isOverTime,jdbcType=BIT},
+      </if>
+      <if test="alertType != null" >
+        alert_type = #{alertType,jdbcType=TINYINT},
+      </if>
+      <if test="unprocessedAlerts != null" >
+        unprocessed_alerts = #{unprocessedAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="confirmStartTime != null" >
+        confirm_start_time = #{confirmStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confirmEndTime != null" >
+        confirm_end_time = #{confirmEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confirmTime != null" >
+        confirm_time = #{confirmTime,jdbcType=INTEGER},
+      </if>
+      <if test="confirmedAlerts != null" >
+        confirmed_alerts = #{confirmedAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="confirmDesc != null" >
+        confirm_desc = #{confirmDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTime != null" >
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gosun.isap.dao.po.TAlert" >
+    update t_alert
+    set description = #{description,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=TINYINT},
+      dev_id = #{devId,jdbcType=CHAR},
+      department_id = #{departmentId,jdbcType=CHAR},
+      status = #{status,jdbcType=TINYINT},
+      is_over_time = #{isOverTime,jdbcType=BIT},
+      alert_type = #{alertType,jdbcType=TINYINT},
+      unprocessed_alerts = #{unprocessedAlerts,jdbcType=INTEGER},
+      confirm_start_time = #{confirmStartTime,jdbcType=TIMESTAMP},
+      confirm_end_time = #{confirmEndTime,jdbcType=TIMESTAMP},
+      confirm_time = #{confirmTime,jdbcType=INTEGER},
+      confirmed_alerts = #{confirmedAlerts,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=BIGINT},
+      confirm_desc = #{confirmDesc,jdbcType=VARCHAR},
+      finish_time = #{finishTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

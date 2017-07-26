@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.TAlertDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.TAlertDetail" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="alert_id" property="alertId" jdbcType="BIGINT" />
+    <result column="user_response_time" property="userResponseTime" jdbcType="INTEGER" />
+    <result column="user_process_time" property="userProcessTime" jdbcType="INTEGER" />
+    <result column="guard_response_time" property="guardResponseTime" jdbcType="INTEGER" />
+    <result column="guard_process_time" property="guardProcessTime" jdbcType="INTEGER" />
+    <result column="total_time" property="totalTime" jdbcType="INTEGER" />
+    <result column="false_alerts" property="falseAlerts" jdbcType="INTEGER" />
+    <result column="confirm_alerts" property="confirmAlerts" jdbcType="INTEGER" />
+    <result column="unprocessed_alerts" property="unprocessedAlerts" jdbcType="INTEGER" />
+    <result column="is_call_back" property="isCallBack" jdbcType="BIT" />
+    <result column="is_second_call_back" property="isSecondCallBack" jdbcType="BIT" />
+    <result column="is_arrived" property="isArrived" jdbcType="BIT" />
+    <result column="is_question_suspect" property="isQuestionSuspect" jdbcType="BIT" />
+    <result column="is_question_suspect_confirmed" property="isQuestionSuspectConfirmed" jdbcType="BIT" />
+    <result column="is_user_over_time" property="isUserOverTime" jdbcType="BIT" />
+    <result column="is_guard_over_time" property="isGuardOverTime" jdbcType="BIT" />
+    <result column="failed_reason_type" property="failedReasonType" jdbcType="TINYINT" />
+    <result column="failed_reason" property="failedReason" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, alert_id, user_response_time, user_process_time, guard_response_time, guard_process_time, 
+    total_time, false_alerts, confirm_alerts, unprocessed_alerts, is_call_back, is_second_call_back, 
+    is_arrived, is_question_suspect, is_question_suspect_confirmed, is_user_over_time, 
+    is_guard_over_time, failed_reason_type, failed_reason
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.TAlertDetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_alert_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_alert_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_alert_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gosun.isap.dao.po.TAlertDetailExample" >
+    delete from t_alert_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gosun.isap.dao.po.TAlertDetail" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_alert_detail (alert_id, user_response_time, user_process_time, 
+      guard_response_time, guard_process_time, total_time, 
+      false_alerts, confirm_alerts, unprocessed_alerts, 
+      is_call_back, is_second_call_back, is_arrived, 
+      is_question_suspect, is_question_suspect_confirmed, 
+      is_user_over_time, is_guard_over_time, failed_reason_type, 
+      failed_reason)
+    values (#{alertId,jdbcType=BIGINT}, #{userResponseTime,jdbcType=INTEGER}, #{userProcessTime,jdbcType=INTEGER}, 
+      #{guardResponseTime,jdbcType=INTEGER}, #{guardProcessTime,jdbcType=INTEGER}, #{totalTime,jdbcType=INTEGER}, 
+      #{falseAlerts,jdbcType=INTEGER}, #{confirmAlerts,jdbcType=INTEGER}, #{unprocessedAlerts,jdbcType=INTEGER}, 
+      #{isCallBack,jdbcType=BIT}, #{isSecondCallBack,jdbcType=BIT}, #{isArrived,jdbcType=BIT}, 
+      #{isQuestionSuspect,jdbcType=BIT}, #{isQuestionSuspectConfirmed,jdbcType=BIT}, 
+      #{isUserOverTime,jdbcType=BIT}, #{isGuardOverTime,jdbcType=BIT}, #{failedReasonType,jdbcType=TINYINT}, 
+      #{failedReason,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gosun.isap.dao.po.TAlertDetail" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_alert_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="alertId != null" >
+        alert_id,
+      </if>
+      <if test="userResponseTime != null" >
+        user_response_time,
+      </if>
+      <if test="userProcessTime != null" >
+        user_process_time,
+      </if>
+      <if test="guardResponseTime != null" >
+        guard_response_time,
+      </if>
+      <if test="guardProcessTime != null" >
+        guard_process_time,
+      </if>
+      <if test="totalTime != null" >
+        total_time,
+      </if>
+      <if test="falseAlerts != null" >
+        false_alerts,
+      </if>
+      <if test="confirmAlerts != null" >
+        confirm_alerts,
+      </if>
+      <if test="unprocessedAlerts != null" >
+        unprocessed_alerts,
+      </if>
+      <if test="isCallBack != null" >
+        is_call_back,
+      </if>
+      <if test="isSecondCallBack != null" >
+        is_second_call_back,
+      </if>
+      <if test="isArrived != null" >
+        is_arrived,
+      </if>
+      <if test="isQuestionSuspect != null" >
+        is_question_suspect,
+      </if>
+      <if test="isQuestionSuspectConfirmed != null" >
+        is_question_suspect_confirmed,
+      </if>
+      <if test="isUserOverTime != null" >
+        is_user_over_time,
+      </if>
+      <if test="isGuardOverTime != null" >
+        is_guard_over_time,
+      </if>
+      <if test="failedReasonType != null" >
+        failed_reason_type,
+      </if>
+      <if test="failedReason != null" >
+        failed_reason,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="alertId != null" >
+        #{alertId,jdbcType=BIGINT},
+      </if>
+      <if test="userResponseTime != null" >
+        #{userResponseTime,jdbcType=INTEGER},
+      </if>
+      <if test="userProcessTime != null" >
+        #{userProcessTime,jdbcType=INTEGER},
+      </if>
+      <if test="guardResponseTime != null" >
+        #{guardResponseTime,jdbcType=INTEGER},
+      </if>
+      <if test="guardProcessTime != null" >
+        #{guardProcessTime,jdbcType=INTEGER},
+      </if>
+      <if test="totalTime != null" >
+        #{totalTime,jdbcType=INTEGER},
+      </if>
+      <if test="falseAlerts != null" >
+        #{falseAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="confirmAlerts != null" >
+        #{confirmAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="unprocessedAlerts != null" >
+        #{unprocessedAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="isCallBack != null" >
+        #{isCallBack,jdbcType=BIT},
+      </if>
+      <if test="isSecondCallBack != null" >
+        #{isSecondCallBack,jdbcType=BIT},
+      </if>
+      <if test="isArrived != null" >
+        #{isArrived,jdbcType=BIT},
+      </if>
+      <if test="isQuestionSuspect != null" >
+        #{isQuestionSuspect,jdbcType=BIT},
+      </if>
+      <if test="isQuestionSuspectConfirmed != null" >
+        #{isQuestionSuspectConfirmed,jdbcType=BIT},
+      </if>
+      <if test="isUserOverTime != null" >
+        #{isUserOverTime,jdbcType=BIT},
+      </if>
+      <if test="isGuardOverTime != null" >
+        #{isGuardOverTime,jdbcType=BIT},
+      </if>
+      <if test="failedReasonType != null" >
+        #{failedReasonType,jdbcType=TINYINT},
+      </if>
+      <if test="failedReason != null" >
+        #{failedReason,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gosun.isap.dao.po.TAlertDetailExample" resultType="java.lang.Integer" >
+    select count(*) from t_alert_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_alert_detail
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.alertId != null" >
+        alert_id = #{record.alertId,jdbcType=BIGINT},
+      </if>
+      <if test="record.userResponseTime != null" >
+        user_response_time = #{record.userResponseTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.userProcessTime != null" >
+        user_process_time = #{record.userProcessTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.guardResponseTime != null" >
+        guard_response_time = #{record.guardResponseTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.guardProcessTime != null" >
+        guard_process_time = #{record.guardProcessTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.totalTime != null" >
+        total_time = #{record.totalTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.falseAlerts != null" >
+        false_alerts = #{record.falseAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="record.confirmAlerts != null" >
+        confirm_alerts = #{record.confirmAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="record.unprocessedAlerts != null" >
+        unprocessed_alerts = #{record.unprocessedAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="record.isCallBack != null" >
+        is_call_back = #{record.isCallBack,jdbcType=BIT},
+      </if>
+      <if test="record.isSecondCallBack != null" >
+        is_second_call_back = #{record.isSecondCallBack,jdbcType=BIT},
+      </if>
+      <if test="record.isArrived != null" >
+        is_arrived = #{record.isArrived,jdbcType=BIT},
+      </if>
+      <if test="record.isQuestionSuspect != null" >
+        is_question_suspect = #{record.isQuestionSuspect,jdbcType=BIT},
+      </if>
+      <if test="record.isQuestionSuspectConfirmed != null" >
+        is_question_suspect_confirmed = #{record.isQuestionSuspectConfirmed,jdbcType=BIT},
+      </if>
+      <if test="record.isUserOverTime != null" >
+        is_user_over_time = #{record.isUserOverTime,jdbcType=BIT},
+      </if>
+      <if test="record.isGuardOverTime != null" >
+        is_guard_over_time = #{record.isGuardOverTime,jdbcType=BIT},
+      </if>
+      <if test="record.failedReasonType != null" >
+        failed_reason_type = #{record.failedReasonType,jdbcType=TINYINT},
+      </if>
+      <if test="record.failedReason != null" >
+        failed_reason = #{record.failedReason,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_alert_detail
+    set id = #{record.id,jdbcType=BIGINT},
+      alert_id = #{record.alertId,jdbcType=BIGINT},
+      user_response_time = #{record.userResponseTime,jdbcType=INTEGER},
+      user_process_time = #{record.userProcessTime,jdbcType=INTEGER},
+      guard_response_time = #{record.guardResponseTime,jdbcType=INTEGER},
+      guard_process_time = #{record.guardProcessTime,jdbcType=INTEGER},
+      total_time = #{record.totalTime,jdbcType=INTEGER},
+      false_alerts = #{record.falseAlerts,jdbcType=INTEGER},
+      confirm_alerts = #{record.confirmAlerts,jdbcType=INTEGER},
+      unprocessed_alerts = #{record.unprocessedAlerts,jdbcType=INTEGER},
+      is_call_back = #{record.isCallBack,jdbcType=BIT},
+      is_second_call_back = #{record.isSecondCallBack,jdbcType=BIT},
+      is_arrived = #{record.isArrived,jdbcType=BIT},
+      is_question_suspect = #{record.isQuestionSuspect,jdbcType=BIT},
+      is_question_suspect_confirmed = #{record.isQuestionSuspectConfirmed,jdbcType=BIT},
+      is_user_over_time = #{record.isUserOverTime,jdbcType=BIT},
+      is_guard_over_time = #{record.isGuardOverTime,jdbcType=BIT},
+      failed_reason_type = #{record.failedReasonType,jdbcType=TINYINT},
+      failed_reason = #{record.failedReason,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gosun.isap.dao.po.TAlertDetail" >
+    update t_alert_detail
+    <set >
+      <if test="alertId != null" >
+        alert_id = #{alertId,jdbcType=BIGINT},
+      </if>
+      <if test="userResponseTime != null" >
+        user_response_time = #{userResponseTime,jdbcType=INTEGER},
+      </if>
+      <if test="userProcessTime != null" >
+        user_process_time = #{userProcessTime,jdbcType=INTEGER},
+      </if>
+      <if test="guardResponseTime != null" >
+        guard_response_time = #{guardResponseTime,jdbcType=INTEGER},
+      </if>
+      <if test="guardProcessTime != null" >
+        guard_process_time = #{guardProcessTime,jdbcType=INTEGER},
+      </if>
+      <if test="totalTime != null" >
+        total_time = #{totalTime,jdbcType=INTEGER},
+      </if>
+      <if test="falseAlerts != null" >
+        false_alerts = #{falseAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="confirmAlerts != null" >
+        confirm_alerts = #{confirmAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="unprocessedAlerts != null" >
+        unprocessed_alerts = #{unprocessedAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="isCallBack != null" >
+        is_call_back = #{isCallBack,jdbcType=BIT},
+      </if>
+      <if test="isSecondCallBack != null" >
+        is_second_call_back = #{isSecondCallBack,jdbcType=BIT},
+      </if>
+      <if test="isArrived != null" >
+        is_arrived = #{isArrived,jdbcType=BIT},
+      </if>
+      <if test="isQuestionSuspect != null" >
+        is_question_suspect = #{isQuestionSuspect,jdbcType=BIT},
+      </if>
+      <if test="isQuestionSuspectConfirmed != null" >
+        is_question_suspect_confirmed = #{isQuestionSuspectConfirmed,jdbcType=BIT},
+      </if>
+      <if test="isUserOverTime != null" >
+        is_user_over_time = #{isUserOverTime,jdbcType=BIT},
+      </if>
+      <if test="isGuardOverTime != null" >
+        is_guard_over_time = #{isGuardOverTime,jdbcType=BIT},
+      </if>
+      <if test="failedReasonType != null" >
+        failed_reason_type = #{failedReasonType,jdbcType=TINYINT},
+      </if>
+      <if test="failedReason != null" >
+        failed_reason = #{failedReason,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gosun.isap.dao.po.TAlertDetail" >
+    update t_alert_detail
+    set alert_id = #{alertId,jdbcType=BIGINT},
+      user_response_time = #{userResponseTime,jdbcType=INTEGER},
+      user_process_time = #{userProcessTime,jdbcType=INTEGER},
+      guard_response_time = #{guardResponseTime,jdbcType=INTEGER},
+      guard_process_time = #{guardProcessTime,jdbcType=INTEGER},
+      total_time = #{totalTime,jdbcType=INTEGER},
+      false_alerts = #{falseAlerts,jdbcType=INTEGER},
+      confirm_alerts = #{confirmAlerts,jdbcType=INTEGER},
+      unprocessed_alerts = #{unprocessedAlerts,jdbcType=INTEGER},
+      is_call_back = #{isCallBack,jdbcType=BIT},
+      is_second_call_back = #{isSecondCallBack,jdbcType=BIT},
+      is_arrived = #{isArrived,jdbcType=BIT},
+      is_question_suspect = #{isQuestionSuspect,jdbcType=BIT},
+      is_question_suspect_confirmed = #{isQuestionSuspectConfirmed,jdbcType=BIT},
+      is_user_over_time = #{isUserOverTime,jdbcType=BIT},
+      is_guard_over_time = #{isGuardOverTime,jdbcType=BIT},
+      failed_reason_type = #{failedReasonType,jdbcType=TINYINT},
+      failed_reason = #{failedReason,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

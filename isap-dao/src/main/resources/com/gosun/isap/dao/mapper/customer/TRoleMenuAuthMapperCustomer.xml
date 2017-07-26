@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.customer.TRoleMenuAuthMapperCustomer">
+	<resultMap id="RoleMenuMap"
+		type="com.gosun.isap.dao.po.customer.TRoleMenuAuthCustomer">
+		<result column="name" property="name" />
+		<result column="permission" property="permission" />
+	</resultMap>
+	<select id="getRoleMenuAuthList" resultMap="RoleMenuMap"
+		parameterType="java.lang.Long">
+		SELECT b.name,b.permission
+		FROM
+		t_role_menu_auth a
+		LEFT
+		JOIN t_menu_authdef b ON b.id=a.auth_id
+		WHERE
+		a.role_id=#{roleId}
+	</select>
+</mapper>

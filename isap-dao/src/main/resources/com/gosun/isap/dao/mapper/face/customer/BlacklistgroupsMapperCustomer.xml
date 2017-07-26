@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.face.customer.BlacklistgroupsMapperCustomer" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.face.Blacklistgroups" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ContactID" property="contactid" jdbcType="INTEGER" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="UsedFlag" property="usedflag" jdbcType="INTEGER" />
+    <result column="State" property="state" jdbcType="INTEGER" />
+    <result column="Creator" property="creator" jdbcType="VARCHAR" />
+    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="LastEditor" property="lasteditor" jdbcType="VARCHAR" />
+    <result column="LastEditTime" property="lastedittime" jdbcType="TIMESTAMP" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ContactID, Name, UsedFlag, State, Creator, CreateTime, LastEditor, LastEditTime, 
+    Remark
+  </sql>
+  <sql id="Base_Column_List_T1" >
+    T1.ID, T1.ContactID, T1.Name, T1.UsedFlag, T1.State, T1.Creator,
+    T1.CreateTime, T1.LastEditor, T1.LastEditTime, T1.Remark 
+  </sql>
+  <select id="selectlistGroupBylistID" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List_T1"/>
+    from Blacklistgroups as T1
+    left join Groupblacklists as T2 on T1.ID = T2.BlacklistGroupID
+    where T2.BlacklistID = #{listID,jdbcType=INTEGER}
+    group by <include refid="Base_Column_List_T1"/>
+  </select>
+  <select id="selectListGroupByDepartmentID" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List_T1"/>
+    from Blacklistgroups as T1
+    left join Hostblacklistgroups as T2 on T1.ID = T2.BlacklistGroupID
+    left join Hosts as T3 on T2.HostID = T3.ID
+    where T3.Remark = #{remark,jdbcType=VARCHAR}
+    group by <include refid="Base_Column_List_T1"/>
+  </select>
+  <select id="countToGetListGroup" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    select count(*) from BlacklistGroups 
+    <if test="creator != null">
+      where Creator = #{creator,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <select id="selectToGetListGroup" resultMap="BaseResultMap" parameterType="map">
+    select top (${limit})
+    <include refid="Base_Column_List" />
+    from BlacklistGroups
+    <where>
+      ID NOT IN ( select top(${start}) ID from BlacklistGroups 
+       <if test="creator != null">
+       where Creator = #{creator,jdbcType=INTEGER}
+       </if>
+      )
+      <if test="creator != null">
+        and Creator = #{creator,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+</mapper>

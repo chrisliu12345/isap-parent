@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.face.customer.FaceTDepartmentMapperCustomer">
+	<resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.TDepartment">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="parent" property="parent" jdbcType="CHAR" />
+		<result column="community_flag" property="communityFlag"
+			jdbcType="TINYINT" />
+	</resultMap>
+	
+	<select id="selectByUserID" resultMap="BaseResultMap"
+		parameterType="map">
+		select T1.id, T1.name, T1.parent, T1.community_flag
+		from t_department as T1
+		left join t_role_dep as T2 on T1.id = T2.department_id
+		left join t_user_belong as T3 on T2.role_id = T3.role_id
+		left join t_device as T4 on T1.id = T4.department_id
+		where T3.user_id = #{userID,jdbcType=BIGINT}
+		and T4.description = #{devType,jdbcType=VARCHAR}
+		group by T1.ID
+	</select>
+	
+	<select id="selectByKeyToParentInfo" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select id, name, parent, community_flag
+		from t_department
+		where id =( select department_id from t_device where id = #{id,jdbcType=CHAR})
+	</select>
+	
+	<select id="selectByAdministratorID" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select T1.id, T1.name, T1.parent, T1.community_flag
+		from t_department as T1
+		left join t_device as T2 on T1.id = T2.department_id
+		where T2.description = #{devType,jdbcType=VARCHAR}
+		group by T1.ID
+	</select>
+</mapper>

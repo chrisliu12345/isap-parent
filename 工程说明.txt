@@ -1,0 +1,31 @@
+1、基于maven来管理工程，划分成多个模块，模块之间独立开发
+
+    为了方便管理，创建一个新模块时，建议使用统一的规范。如
+    一个模块的目录结构
+    isap-adapter
+        |- isap-adapter-api
+        |- isap-adapter-hik
+        |- isap-adapter-dahua
+		
+    每个模块有一个单独的maven module目录，目录下包括当前模块对外提供的API，命名为xxx-api。
+    另外包含模块内部的具体实现，命名为xxx-zzz。
+    
+2、模块之间依赖
+    模块之间有依赖时，只能依赖对方模块的xxx-api模块，不能依赖具体的实现模块。
+
+
+3、模块划分
+    isap-adapter                适配第三方平台模块
+    isap-authority              权限模块
+    isap-blackwhitelist         黑白名单模块
+    isap-dao                    数据库模块
+    isap-main                   启动入口
+    isap-proxy                  代理模块（对isap-adapter的代理）
+    isap-ptz                    云台模块
+    isap-record                 录像模块
+    isap-resource               资源模块（资源及设备的管理）
+    isap-statistical            统计模块
+    isap-user                   用户模块
+    isap-warn                   告警模块
+    
+    说明：isap-adapter最终发布时，每个厂家平台对应一个独立的进程

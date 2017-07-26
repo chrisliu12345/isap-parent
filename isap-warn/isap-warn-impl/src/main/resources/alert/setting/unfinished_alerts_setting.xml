@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<table handler="com.gosun.isap.warn.impl.alert.export.handler.UnfinishedAfterHandler">
+    <header>
+        <cell row="2" column="7">date</cell>
+    </header>
+    <body row="4" column="1">
+        <column>areaName</column>
+        <column>communityName</column>
+        <column>preCount</column>
+        <column date="HH:mm:ss">startingTime</column>
+        <column date="HH:mm:ss">arrivedTime</column>
+        <column>failedReason</column>
+        <column>guardInfo</column>
+    </body>
+    <template resource="alert/template/unfinished_alerts_template.xls" index="0"/>
+    <style>
+        <date>yyyy-MM-dd</date>
+    </style>
+</table>

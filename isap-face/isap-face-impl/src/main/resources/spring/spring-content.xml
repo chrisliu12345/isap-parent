@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd  
+        http://code.alibabatech.com/schema/dubbo        
+		http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.1.xsd ">
+
+	<context:component-scan base-package="com.gosun.isap.face"></context:component-scan>
+
+	<bean id="UploadFileApi" class="com.gosun.isap.face.impl.UploadFile" />
+	<bean id="StatisticsApi" class="com.gosun.isap.face.impl.Statistics" />
+	<bean id="ListGroupApi" class="com.gosun.isap.face.impl.ListGroup" />
+	<bean id="ListApi" class="com.gosun.isap.face.impl.List" />
+	<bean id="GroupListApi" class="com.gosun.isap.face.impl.GroupList" />
+	<bean id="FaceServerRelationApi" class="com.gosun.isap.face.impl.FaceServerRelation" />
+	<bean id="DepartmentlistGroupApi" class="com.gosun.isap.face.impl.DepartmentlistGroup" />
+	<bean id="CapFaceApi" class="com.gosun.isap.face.impl.CapFace" />
+	<bean id="CallBackApi" class="com.gosun.isap.face.impl.CallBack" />
+
+	<bean id="DataSource" class="com.gosun.isap.face.impl.DataSource" />
+
+	<dubbo:service interface="com.gosun.isap.face.api.IUploadFileApi"
+		ref="UploadFileApi" protocol="rest" filter="authorityFilter,restExceptionFilter" />
+		
+	<dubbo:service interface="com.gosun.isap.face.api.IStatisticsApi"
+		ref="StatisticsApi" protocol="rest" filter="authorityFilter,restExceptionFilter" />
+		
+	<dubbo:service interface="com.gosun.isap.face.api.IListGroupApi"
+		ref="ListGroupApi" protocol="rest" filter="authorityFilter,restExceptionFilter" />
+		
+	<dubbo:service interface="com.gosun.isap.face.api.IListApi"
+		ref="ListApi" protocol="rest" filter="authorityFilter,restExceptionFilter" />
+		
+	<dubbo:service interface="com.gosun.isap.face.api.IGroupListApi"
+		ref="GroupListApi" protocol="rest" filter="authorityFilter,restExceptionFilter" />
+		
+	<dubbo:service interface="com.gosun.isap.face.api.IFaceServerRelationApi"
+		ref="FaceServerRelationApi" protocol="rest" filter="authorityFilter,restExceptionFilter" />
+		
+	<dubbo:service interface="com.gosun.isap.face.api.IDepartmentlistGroupApi"
+		ref="DepartmentlistGroupApi" protocol="rest" filter="authorityFilter,restExceptionFilter" />
+		
+	<dubbo:service interface="com.gosun.isap.face.api.ICapFaceApi"
+		ref="CapFaceApi" protocol="rest" filter="authorityFilter,restExceptionFilter" />
+		
+	<dubbo:service interface="com.gosun.isap.face.api.ICallBack"
+		ref="CallBackApi" protocol="rest" filter="authorityFilter,restExceptionFilter" />
+	
+	<aop:config>
+		<aop:aspect id="DataSourceAOP" ref="DataSource">
+			<aop:pointcut id="clearDataSource" expression="execution(* com.gosun.isap.face.api..*(..))" />
+			<aop:after-returning method="clearDataSourceType" pointcut-ref="clearDataSource" />
+			<aop:after-throwing method="clearDataSourceType" pointcut-ref="clearDataSource"/>
+		</aop:aspect>
+	</aop:config>
+</beans>

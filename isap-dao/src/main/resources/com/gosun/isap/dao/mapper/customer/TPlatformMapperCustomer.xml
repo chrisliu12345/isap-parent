@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.customer.TPlatformMapperCustomer">
+	<resultMap id="BaseResultMap"
+		type="com.gosun.isap.dao.po.customer.TPlatformCustomer">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="id" property="id" jdbcType="TINYINT" />
+		<result column="plat_id" property="platId" jdbcType="BIGINT" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="dev_type" property="devType" jdbcType="TINYINT" />
+		<result column="channel_type" property="channelType" jdbcType="INTEGER" />
+		<result column="channel_sub_type" property="channelSubType"
+			jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="parent" property="parent" jdbcType="CHAR" />
+		<result column="department_id" property="departmentId"
+			jdbcType="CHAR" />
+		<result column="location_x" property="locationX" jdbcType="VARCHAR" />
+		<result column="location_y" property="locationY" jdbcType="VARCHAR" />
+		<result column="brief_name" property="briefName" jdbcType="VARCHAR" />
+		<result column="name_spell" property="nameSpell" jdbcType="CHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="net_status" property="netstatus" jdbcType="TINYINT" />
+	</resultMap>
+
+	<!-- 批量插入生成的兑换码 -->
+	<insert id="insterBatchDevice" parameterType="java.util.List">
+		insert into t_device
+		(id,code,plat_id, name, dev_type,
+		status,parent,department_id,brief_name,name_spell,description,net_status,location_x,location_y)
+		values
+		<foreach collection="list" item="devlidt" index="index"
+			separator=",">
+			(
+			#{devlidt.id},
+			#{devlidt.code},
+			#{devlidt.platId},
+			#{devlidt.name},
+			#{devlidt.devType},
+			#{devlidt.status}, #{devlidt.parent},#{devlidt.departmentId},
+			#{devlidt.briefName}, #{devlidt.nameSpell},#{devlidt.description},#{devlidt.netStatus},
+			#{devlidt.locationX},#{devlidt.locationY}
+			)
+		</foreach>
+	</insert>
+
+	<update id="devNetIn" parameterType="java.util.List">
+		update t_device set net_status = "1" where id IN
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<update id="devNetOut" parameterType="java.util.List">
+		update t_device set net_status = "0" where id IN
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<update id="updateDev" parameterType="java.lang.String">
+		update t_device set net_status = "3" where id = #{id}
+	</update>
+
+	<delete id="delDev" parameterType="java.util.List">
+		delete from t_device where id = #{id}
+	</delete>
+
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <bean id="alertListRestService" class="com.gosun.isap.warn.impl.alert.rest.AlertListRestServiceImpl"/>
+    <bean id="alertProcessRestService" class="com.gosun.isap.warn.impl.alert.rest.AlertProcessingRestServiceImpl"/>
+    <bean id="alertRestService" class="com.gosun.isap.warn.impl.alert.rest.AlertRestServiceImpl"/>
+    <bean id="alertExportRestService" class="com.gosun.isap.warn.impl.alert.rest.AlertExportRestServiceImpl"/>
+    <bean id="guardManageRestService" class="com.gosun.isap.warn.impl.alert.rest.GuardManageRestServiceImpl"/>
+    <bean id="guardGroupManageRestService" class="com.gosun.isap.warn.impl.alert.rest.GuardGroupManageRestServiceImpl"/>
+    <bean id="alertStatisticsRestService" class="com.gosun.isap.warn.impl.alert.rest.AlertStatisticsRestServiceImpl"/>
+    <bean id="utilsRestService" class="com.gosun.isap.warn.impl.alert.rest.UtilsRestServiceImpl"/>
+    <bean id="guardRestService" class="com.gosun.isap.warn.impl.alert.rest.GuardRestServiceImpl"/>
+    <bean id="guardGroupRestService" class="com.gosun.isap.warn.impl.alert.rest.GuardGroupRestServiceImpl"/>
+
+    <dubbo:service interface="com.gosun.isap.warn.api.alert.rest.AlertListRestService" ref="alertListRestService"
+                   filter="restExceptionFilter,authorityFilter" protocol="rest"/>
+    <dubbo:service interface="com.gosun.isap.warn.api.alert.rest.AlertProcessingRestService"
+                   ref="alertProcessRestService" filter="restExceptionFilter,authorityFilter" protocol="rest"/>
+    <dubbo:service interface="com.gosun.isap.warn.api.alert.rest.AlertRestService" ref="alertRestService"
+                   filter="restExceptionFilter,authorityFilter" protocol="rest"/>
+    <dubbo:service interface="com.gosun.isap.warn.api.alert.rest.AlertExportRestService" ref="alertExportRestService"
+                   filter="restExceptionFilter,authorityFilter" protocol="rest"/>
+    <dubbo:service interface="com.gosun.isap.warn.api.alert.rest.GuardManageRestService" ref="guardManageRestService"
+                   filter="restExceptionFilter,authorityFilter" protocol="rest"/>
+    <dubbo:service interface="com.gosun.isap.warn.api.alert.rest.GuardGroupManageRestService"
+                   ref="guardGroupManageRestService" filter="restExceptionFilter,authorityFilter" protocol="rest"/>
+    <dubbo:service interface="com.gosun.isap.warn.api.alert.rest.AlertStatisticsRestService"
+                   ref="alertStatisticsRestService" filter="restExceptionFilter,authorityFilter" protocol="rest"/>
+    <dubbo:service interface="com.gosun.isap.warn.api.alert.rest.UtilsRestService" ref="utilsRestService"
+                   filter="restExceptionFilter,authorityFilter" protocol="rest"/>
+    <dubbo:service interface="com.gosun.isap.warn.api.alert.rest.GuardRestService" ref="guardRestService"
+                   filter="restExceptionFilter,authorityFilter" protocol="rest"/>
+    <dubbo:service interface="com.gosun.isap.warn.api.alert.rest.GuardGroupRestService" ref="guardGroupRestService"
+                   filter="restExceptionFilter,authorityFilter" protocol="rest"/>
+
+    <tx:annotation-driven/>
+</beans>

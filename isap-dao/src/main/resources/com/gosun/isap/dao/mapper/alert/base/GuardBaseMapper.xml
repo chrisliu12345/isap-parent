@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gosun.isap.dao.mapper.alert.base.GuardBaseMapper">
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.alert.base.BaseGuard">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="phone" jdbcType="CHAR" property="phone" />
+    <result column="guard_desc" jdbcType="VARCHAR" property="guardDesc" />
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="cid" jdbcType="CHAR" property="cid" />
+    <result column="home_address" jdbcType="VARCHAR" property="homeAddress" />
+    <result column="birthday" jdbcType="DATE" property="birthday" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, phone, guard_desc, group_id, cid, home_address, birthday, user_id, add_time, 
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_guard
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_guard
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.gosun.isap.dao.po.alert.base.BaseGuard">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_guard (name, phone, guard_desc, 
+      group_id, cid, home_address, 
+      birthday, user_id, add_time, 
+      update_time)
+    values (#{name,jdbcType=VARCHAR}, #{phone,jdbcType=CHAR}, #{guardDesc,jdbcType=VARCHAR}, 
+      #{groupId,jdbcType=BIGINT}, #{cid,jdbcType=CHAR}, #{homeAddress,jdbcType=VARCHAR}, 
+      #{birthday,jdbcType=DATE}, #{userId,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gosun.isap.dao.po.alert.base.BaseGuard">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_guard
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="guardDesc != null">
+        guard_desc,
+      </if>
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="cid != null">
+        cid,
+      </if>
+      <if test="homeAddress != null">
+        home_address,
+      </if>
+      <if test="birthday != null">
+        birthday,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=CHAR},
+      </if>
+      <if test="guardDesc != null">
+        #{guardDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="cid != null">
+        #{cid,jdbcType=CHAR},
+      </if>
+      <if test="homeAddress != null">
+        #{homeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gosun.isap.dao.po.alert.base.BaseGuard">
+    update t_guard
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=CHAR},
+      </if>
+      <if test="guardDesc != null">
+        guard_desc = #{guardDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="cid != null">
+        cid = #{cid,jdbcType=CHAR},
+      </if>
+      <if test="homeAddress != null">
+        home_address = #{homeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gosun.isap.dao.po.alert.base.BaseGuard">
+    update t_guard
+    set name = #{name,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=CHAR},
+      guard_desc = #{guardDesc,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=BIGINT},
+      cid = #{cid,jdbcType=CHAR},
+      home_address = #{homeAddress,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=DATE},
+      user_id = #{userId,jdbcType=BIGINT},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_guard 
+    <if test="limit != null and limit.length() > 0">
+    limit ${limit}
+    </if>
+  </select>
+  <select id="selectAllAndSort" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List" /> 
+        from t_guard 
+        <if test="orderBy != null and orderBy.size() &gt; 0">
+            order by
+            <foreach collection="orderBy" separator="," item="column">
+                ${column}
+            </foreach>
+        </if>
+        <if test="limit != null and limit.length() > 0">
+            limit ${limit}
+        </if>
+  </select>
+  <select id="selectByColumn" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_guard 
+        <where>
+            <if test="column == null">
+                false
+            </if>
+            <if test="column != null and value != null ">
+                ${column} = #{value}
+            </if>
+            <if test="column != null and value == null">
+                ${column} is null
+            </if>
+        </where>
+        <if test="limit != null and limit.length() > 0">
+            limit ${limit}
+        </if>
+  </select>
+  <select id="selectByColumnAndSort" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_guard 
+        <where>
+            <if test="column == null">
+                false
+            </if>
+            <if test="column != null and value != null ">
+                ${column} = #{value}
+            </if>
+            <if test="column != null and value == null">
+                ${column} is null
+            </if>
+        </where>
+        <if test="orderBy != null and orderBy.size() &gt; 0">
+            order by
+            <foreach collection="orderBy" separator="," item="column">
+                ${column}
+            </foreach>
+        </if>
+        <if test="limit != null and limit.length() > 0">
+            limit ${limit}
+        </if>
+  </select>
+  <select id="selectFirstByColumn" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_guard 
+        <where>
+            <if test="column == null">
+                false
+            </if>
+            <if test="column != null and value != null ">
+                ${column} = #{value}
+            </if>
+            <if test="column != null and value == null">
+                ${column} is null
+            </if>
+        </where>
+    limit 1
+  </select>
+  <select id="selectByColumns" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_guard
+        <where>
+            <if test="map == null or map.size() == 0">
+                false
+            </if>
+            <if test="map != null and map.size &gt; 0">
+                <foreach collection="map" index="column" item="value">
+                    <if test="column != null and value != null">
+                        AND ${column} = #{value}
+                    </if>
+                    <if test="column != null and value == null">
+                        AND ${column} is null
+                    </if>
+                    <if test="map.size() == 1 and column == null">
+                        and false
+                    </if>
+                </foreach>
+            </if>
+        </where>
+        <if test="limit != null and limit.length() > 0">
+            limit ${limit}
+        </if>
+  </select>
+  <select id="selectByColumnsAndSort" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_guard
+        <where>
+            <if test="map == null or map.size() == 0">
+                false
+            </if>
+            <if test="map != null and map.size &gt; 0">
+                <foreach collection="map" index="column" item="value">
+                    <if test="column != null and value != null">
+                        AND ${column} = #{value}
+                    </if>
+                    <if test="column != null and value == null">
+                        AND ${column} is null
+                    </if>
+                    <if test="map.size() == 1 and column == null">
+                        and false
+                    </if>
+                </foreach>
+            </if>
+        </where>
+        <if test="orderBy != null and orderBy.size() &gt; 0">
+            order by
+            <foreach collection="orderBy" separator="," item="column">
+                ${column}
+            </foreach>
+        </if>
+        <if test="limit != null and limit.length() > 0">
+            limit ${limit}
+        </if>
+  </select>
+  <select id="selectFirstByColumns" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_guard
+        <where>
+            <if test="map == null or map.size() == 0">
+                false
+            </if>
+            <if test="map != null and map.size &gt; 0">
+                <foreach collection="map" index="column" item="value">
+                    <if test="column != null and value != null">
+                        AND ${column} = #{value}
+                    </if>
+                    <if test="column != null and value == null">
+                        AND ${column} is null
+                    </if>
+                    <if test="map.size() == 1 and column == null">
+                        and false
+                    </if>
+                </foreach>
+            </if>
+        </where>
+    limit 1
+  </select>
+  <select id="totalCount" resultType="int">
+    select count(*) from t_guard
+  </select>
+  <select id="countByColumn" resultType="int">
+    select count(*) from t_guard
+        <where>
+            <if test="column == null">
+                false
+            </if>
+            <if test="column != null and value != null ">
+                ${column} = #{value}
+            </if>
+            <if test="column != null and value == null">
+                ${column} is null
+            </if>
+        </where>
+  </select>
+  <select id="countByColumns" resultType="int">
+    select
+    count(*) 
+    from t_guard
+        <where>
+            <if test="map == null or map.size() == 0">
+                false
+            </if>
+            <if test="map != null and map.size &gt; 0">
+                <foreach collection="map" index="column" item="value">
+                    <if test="column != null and value != null">
+                        AND ${column} = #{value}
+                    </if>
+                    <if test="column != null and value == null">
+                        AND ${column} is null
+                    </if>
+                    <if test="map.size() == 1 and column == null">
+                        and false
+                    </if>
+                </foreach>
+            </if>
+        </where>
+  </select>
+  <delete id="deleteByColumn">
+    delete from t_guard where 
+        <if test="column != null and value != null">
+            ${column} = #{value}
+        </if>
+        <if test="column != null and value == null">
+            ${column} is null
+        </if>
+        <if test="column == null">
+            false
+        </if>
+  </delete>
+  <delete id="deleteByColumns">
+    delete from t_guard
+        <where>
+            <if test="map == null or map.size() == 0">
+                false
+            </if>
+            <if test="map != null and map.size &gt; 0">
+                <foreach collection="map" index="column" item="value">
+                    <if test="column != null and value != null">
+                        AND ${column} = #{value}
+                    </if>
+                    <if test="column != null and value == null">
+                        AND ${column} is null
+                    </if>
+                    <if test="map.size() == 1 and column == null">
+                        and false
+                    </if>
+                </foreach>
+            </if>
+        </where>
+  </delete>
+</mapper>

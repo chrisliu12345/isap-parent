@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gosun.isap.dao.mapper.alert.AlertExportMapper">
+    <select id="getAlertLogByUser" resultType="map">
+        SELECT A.id,
+        A.status as alertStatus,
+        A.alert_type as alertType,
+        A.confirm_end_time as guardStartingTime,
+        A.add_time as addTime,
+        B.is_arrived as isArrived,
+        B.is_call_back as isCallback,
+        B.is_second_call_back as isCallbackAgain,
+        B.is_question_suspect as isQuestionSuspect,
+        B.is_guard_over_time as isGuardOverTime,
+        C.add_time as callbackTime,
+        concat(ifnull(C.reason,''),'　',ifnull(D.reason,'')) as callbackContent,
+        D.add_time as callbackAgainTime,
+        F.reason as failedReason,
+        G.name as departmentName,
+        H.content as guardInfo
+        FROM
+        (select id,alert_type,status,department_id,add_time,confirm_end_time from t_alert
+        <where>
+            status > 9 and alert_type > 9 and user_id = #{userId} and status &lt; 30 and status != 26
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+        )
+        as A
+        left join t_alert_detail B
+        on A.id = B.alert_id
+        left join t_alert_log C
+        on A.id = C.alert_id and C.log_type in (3,21)
+        left join t_alert_log D
+        on A.id = D.alert_id and D.log_type = 10
+        left join t_guard_alert E
+        on A.id = E.alert_id
+        left join t_alert_log F
+        on A.id = F.alert_id and F.log_type = 21
+        left join t_department G
+        on G.id = A.department_id
+        left join t_alert_log H
+        on A.id = H.alert_id and H.log_type = 1
+        order by A.add_time
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+    <select id="countAlertLogByUser" resultType="int">
+        select count(*) from t_alert
+        <where>
+            status > 9 and alert_type > 9 and user_id = #{userId} and status &lt; 30 and status != 26
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAlertLogByDepartments" resultType="map">
+        SELECT A.id,
+        A.status as alertStatus,
+        A.alert_type as alertType,
+        A.confirm_end_time as guardStartingTime,
+        A.add_time as addTime,
+        B.is_arrived as isArrived,
+        B.is_call_back as isCallback,
+        B.is_second_call_back as isCallbackAgain,
+        B.is_question_suspect as isQuestionSuspect,
+        B.is_guard_over_time as isGuardOverTime,
+        C.add_time as callbackTime,
+        concat(ifnull(C.reason,''),'　',ifnull(D.reason,'')) as callbackContent,
+        D.add_time as callbackAgainTime,
+        F.reason as failedReason,
+        G.name as departmentName,
+        H.content as guardInfo
+        FROM
+        (select id,alert_type,status,department_id,add_time,confirm_end_time from t_alert
+        <where>
+            status > 9 and alert_type > 9 and status &lt; 30 and status != 26
+            <if test="departmentIds == null or departmentIds.size() == 0">
+                and false
+            </if>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentIds" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+        )
+        as A
+        left join t_alert_detail B
+        on A.id = B.alert_id
+        left join t_alert_log C
+        on A.id = C.alert_id and C.log_type in (3,21)
+        left join t_alert_log D
+        on A.id = D.alert_id and D.log_type = 10
+        left join t_guard_alert E
+        on A.id = E.alert_id
+        left join t_alert_log F
+        on A.id = F.alert_id and F.log_type = 21
+        left join t_department G
+        on G.id = A.department_id
+        left join t_alert_log H
+        on A.id = H.alert_id and H.log_type = 1
+        order by A.add_time
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+    <select id="countAlertLogByDepartments" resultType="int">
+        select count(*)
+        <where>
+            status > 9 and alert_type > 9 and status &lt; 30 and status != 26
+            <if test="departmentIds == null or departmentIds.size() == 0">
+                and false
+            </if>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentIds" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+    <select id="getUnfinishedAlertsByUser" resultType="java.util.Map">
+        select A.status,A.confirm_end_time as startingTime,
+        C.name as areaName,
+        B.name as communityName,
+        D.content as guardInfo,
+        E.add_time as arrivedTime ,
+        F.reason as failedReason
+        from
+        (select id,status,department_id,confirm_end_time from t_alert
+        <where>
+            status &gt; 19 and status &lt; 30 and user_id = #{userId}
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+        ) as A
+        left join t_department B
+        on B.id = A.department_id
+        left join t_department C
+        on C.id = B.parent
+        left join t_alert_log D
+        on D.alert_id = A.id and D.log_type = 1
+        left join t_alert_log E
+        on E.alert_id = A.id and E.log_type = 3
+        left join t_alert_log F
+        on F.alert_id = A.id and F.log_type &gt; 19
+        order by areaName,communityName,startingTime
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+    <select id="countUnfinishedAlertsByUser" resultType="int">
+        select count(*) from t_alert
+        <where>
+            status &gt; 19 and status &lt; 30 and user_id = #{userId}
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+    <select id="getUnfinishedAlertsByDeps" resultType="java.util.Map">
+        select A.status,A.confirm_end_time as startingTime,
+        C.name as areaName,
+        B.name as communityName,
+        D.content as guardInfo,
+        E.add_time as arrivedTime ,
+        F.reason as failedReason
+        from
+        (select id,status,department_id,confirm_end_time from t_alert
+        <where>
+            status &gt; 19 and status &lt; 30
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+            <if test="departmentIds == null or departmentIds.size() == 0">
+                and false
+            </if>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentIds" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ) as A
+        left join t_department B
+        on B.id = A.department_id
+        left join t_department C
+        on C.id = B.parent
+        left join t_alert_log D
+        on D.alert_id = A.id and D.log_type = 1
+        left join t_alert_log E
+        on E.alert_id = A.id and E.log_type = 3
+        left join t_alert_log F
+        on F.alert_id = A.id and F.log_type &gt; 19
+        order by areaName,communityName,startingTime
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+    <select id="countUnfinishedAlertsByDeps" resultType="int">
+        select count(*) from t_alert
+        <where>
+            status &gt; 19 and status &lt; 30
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+            <if test="departmentIds == null or departmentIds.size() == 0">
+                and false
+            </if>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentIds" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getAlertDetailLogByUser" resultType="java.util.Map">
+        SELECT A.id,
+        A.status as alertStatus,
+        A.alert_type as alertType,
+        A.confirm_end_time as guardStartingTime,
+        A.add_time as addTime,
+        B.is_arrived as isArrived,
+        B.is_call_back as isCallback,
+        B.is_second_call_back as isCallbackAgain,
+        B.is_question_suspect as isQuestionSuspect,
+        B.is_guard_over_time as isGuardOverTime,
+        B.guard_response_time as guardResponseTime,
+        C.add_time as callbackTime,
+        concat(ifnull(C.reason,''),'　',ifnull(D.reason,'')) as callbackContent,
+        D.add_time as callbackAgainTime,
+        F.reason as failedReason,
+        G.name as communityName,
+        H.content as guardInfo,
+        I.name as areaName,
+        J.name as deviceName
+        FROM
+        (select id,dev_id,alert_type,status,department_id,add_time,confirm_end_time from t_alert
+        <where>
+            status > 9 and alert_type > 9 and user_id = #{userId} and status &lt; 30 and status != 26
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+        )
+        as A
+        left join t_alert_detail B
+        on A.id = B.alert_id
+        left join t_alert_log C
+        on A.id = C.alert_id and C.log_type in (3,21)
+        left join t_alert_log D
+        on A.id = D.alert_id and D.log_type = 10
+        left join t_guard_alert E
+        on A.id = E.alert_id
+        left join t_alert_log F
+        on A.id = F.alert_id and F.log_type = 21
+        left join t_department G
+        on G.id = A.department_id
+        left join t_alert_log H
+        on A.id = H.alert_id and H.log_type = 1
+        left join t_department I
+        on I.id = G.parent
+        left join t_device J
+        on J.id = A.dev_id
+        order by A.add_time
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+    <select id="countAlertDetailLogByUser" resultType="int">
+        select count(*) from t_alert
+        <where>
+            status > 9 and alert_type > 9 and user_id = #{userId} and status &lt; 30 and status != 26
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAlertDetailLogByDepartments" resultType="java.util.Map">
+        SELECT A.id,
+        A.status as alertStatus,
+        A.alert_type as alertType,
+        A.confirm_end_time as guardStartingTime,
+        A.add_time as addTime,
+        B.is_arrived as isArrived,
+        B.is_call_back as isCallback,
+        B.is_second_call_back as isCallbackAgain,
+        B.is_question_suspect as isQuestionSuspect,
+        B.is_guard_over_time as isGuardOverTime,
+        B.guard_response_time as guardResponseTime,
+        C.add_time as callbackTime,
+        concat(ifnull(C.reason,''),'　',ifnull(D.reason,'')) as callbackContent,
+        D.add_time as callbackAgainTime,
+        F.reason as failedReason,
+        G.name as communityName,
+        H.content as guardInfo,
+        I.name as areaName,
+        J.name as deviceName
+        FROM
+        (select id,dev_id,alert_type,status,department_id,add_time,confirm_end_time from t_alert
+        <where>
+            status &gt; 19 and status &lt; 30
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+            <if test="departmentIds == null or departmentIds.size() == 0">
+                and false
+            </if>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentIds" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        )
+        as A
+        left join t_alert_detail B
+        on A.id = B.alert_id
+        left join t_alert_log C
+        on A.id = C.alert_id and C.log_type in (3,21)
+        left join t_alert_log D
+        on A.id = D.alert_id and D.log_type = 10
+        left join t_guard_alert E
+        on A.id = E.alert_id
+        left join t_alert_log F
+        on A.id = F.alert_id and F.log_type = 21
+        left join t_department G
+        on G.id = A.department_id
+        left join t_alert_log H
+        on A.id = H.alert_id and H.log_type = 1
+        left join t_department I
+        on I.id = G.parent
+        left join t_device J
+        on J.id = A.dev_id
+        order by A.add_time
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+    <select id="countAlertDetailLogByDeps" resultType="int">
+        select count(*) from t_alert
+        <where>
+            status &gt; 19 and status &lt; 30
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+            <if test="departmentIds == null or departmentIds.size() == 0">
+                and false
+            </if>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentIds" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getQuestionSuspectByUser" resultType="map">
+        select B.add_time as alertCreateTime,C.name as communityName,D.name as areaName,E.content as guardInfo,E.add_time as questionSuspectTime from
+        (
+        select id,department_id,add_time from t_alert
+        <where>
+            and user_id = #{userId}
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+        )as B
+        right join
+        (select alert_id from t_alert_detail where is_question_suspect = 1 and is_question_suspect_confirmed = 0) as A
+        on B.id = A.alert_id
+        left join t_department C
+        on C.id = B.department_id
+        left join t_department D
+        on D.id = C.parent
+        left join t_alert_log E
+        on E.alert_id = A.alert_id and E.log_type = 11
+        order by areaName,communityName,alertCreateTime
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+    <select id="countQuestionSuspectByUser" resultType="int">
+        select A.count from (
+        select id from t_alert
+        <where>
+            and user_id = #{userId}
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+        )as B
+        right join
+        (select count(*) as count,alert_id from t_alert_detail where is_question_suspect = 1 and is_question_suspect_confirmed = 0) as A
+        on B.id = A.alert_id
+    </select>
+
+    <select id="getQuestionSuspectByDeps" resultType="map">
+        select B.add_time as alertCreateTime,C.name as communityName,D.name as areaName,E.content as guardInfo,E.add_time as questionSuspectTime from
+        (
+        select id,department_id,add_time from t_alert
+        <where>
+            <if test="departmentId == null or departmentId.size() == 0">
+                and false
+            </if>
+            <if test="departmentId != null and departmentId.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentId" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+        )as B
+        right join
+        (select alert_id from t_alert_detail where is_question_suspect = 1 and is_question_suspect_confirmed = 0) as A
+        on B.id = A.alert_id
+        left join t_department C
+        on C.id = B.department_id
+        left join t_department D
+        on D.id = C.parent
+        left join t_alert_log E
+        on E.alert_id = A.alert_id and E.log_type = 11
+        order by areaName,communityName,alertCreateTime
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+    <select id="countQuestionSuspectByDeps" resultType="int">
+        select A.count from (
+        select id from t_alert
+        <where>
+            <if test="departmentId == null or departmentId.size() == 0">
+                and false
+            </if>
+            <if test="departmentId != null and departmentId.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentId" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+        )as B
+        right join
+        (select count(*) as count,alert_id from t_alert_detail where is_question_suspect = 1 and is_question_suspect_confirmed = 0) as A
+        on B.id = A.alert_id
+    </select>
+
+    <select id="getGuardProcessedAlertsByUser" resultType="java.util.Map">
+        select
+        A.id as alertId,
+        A.confirm_end_time as startingTime,
+        A.alert_type as alertType,
+        C.add_time as arriveTime,
+        B.name as departmentName,
+        D.path as alertImagePath,
+        D.url as alertImageUrl,
+        E.path as arriveImagePath,
+        E.url as arriveImageUrl
+        from (
+        select * from t_alert
+        <where>
+            alert_type > 9 and status = 10 and user_id = #{userId}
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+        ) as A
+        left join
+        t_department B
+        on A.department_id = B.id
+        left join
+        t_alert_log C
+        on A.id = C.alert_id and C.log_type = 3
+        left join
+        t_alert_resource D
+        on D.alert_id = A.id and D.resource_type = 0 and D.resource_index = 0
+        left join
+        t_alert_resource E
+        on E.alert_id = A.id and E.resource_type = 1 and E.resource_index = 0
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+    <select id="countGuardProcessedByUser" resultType="int">
+        select count(*) from t_alert
+        <where>
+            alert_type > 9 and status = 10 and user_id = #{userId}
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+    <select id="getGuardProcessedByDepartment" resultType="java.util.Map">
+        select
+        A.id as alertId,
+        A.confirm_end_time as startingTime,
+        A.alert_type as alertType,
+        C.add_time as arriveTime,
+        B.name as departmentName,
+        D.path as alertImagePath,
+        D.url as alertImageUrl,
+        E.path as arriveImagePath,
+        E.url as arriveImageUrl
+        from (
+        select * from t_alert
+        <where>
+            alert_type > 9 and status = 10
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+            <if test="departmentId == null or departmentId.size() == 0">
+                and false
+            </if>
+            <if test="departmentId != null and departmentId.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentId" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ) as A
+        left join
+        t_department B
+        on A.department_id = B.id
+        left join
+        t_alert_log C
+        on A.id = C.alert_id and C.log_type = 3
+        left join
+        t_alert_resource D
+        on D.alert_id = A.id and D.resource_type = 0 and D.resource_index = 0
+        left join
+        t_alert_resource E
+        on E.alert_id = A.id and E.resource_type = 1 and E.resource_index = 0
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+    <select id="countGuardProcessedByDep" resultType="int">
+        select count(*) from t_alert
+        <where>
+            alert_type > 9 and status = 10
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+            <if test="departmentId == null or departmentId.size() == 0">
+                and false
+            </if>
+            <if test="departmentId != null and departmentId.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentId" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

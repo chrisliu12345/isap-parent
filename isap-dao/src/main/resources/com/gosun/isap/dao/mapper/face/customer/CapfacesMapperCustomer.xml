@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.face.customer.CapfacesMapperCustomer">
+	<resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.face.Capfaces">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="CameraID" property="cameraid" jdbcType="INTEGER" />
+		<result column="FaceURL" property="faceurl" jdbcType="VARCHAR" />
+		<result column="BackgroundURL" property="backgroundurl"
+			jdbcType="VARCHAR" />
+		<result column="Feature" property="feature" jdbcType="VARCHAR" />
+		<result column="CameraName" property="cameraname" jdbcType="VARCHAR" />
+		<result column="Address" property="address" jdbcType="VARCHAR" />
+		<result column="UsedFlag" property="usedflag" jdbcType="INTEGER" />
+		<result column="State" property="state" jdbcType="INTEGER" />
+		<result column="Creator" property="creator" jdbcType="VARCHAR" />
+		<result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="LastEditor" property="lasteditor" jdbcType="VARCHAR" />
+		<result column="LastEditTime" property="lastedittime" jdbcType="TIMESTAMP" />
+		<result column="Remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="CapFacesInfoBeanBaseResultMap" type="com.gosun.isap.dao.po.face.CapFacesInfoBean">
+		<id column="ID" property="ID" jdbcType="INTEGER" />
+		<result column="FaceURL" property="faceURL" jdbcType="VARCHAR" />
+		<result column="BackgroundURL" property="backGroundURL"
+			jdbcType="VARCHAR" />
+		<result column="Address" property="cameraAddress" jdbcType="VARCHAR" />
+		<result column="CapFacesTime" property="capFacesTime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectByCameraID" resultMap="BaseResultMap"
+		parameterType="map">
+		select T1.ID, T1.CameraID, T1.FaceURL, T1.BackgroundURL,
+		T1.CameraName, T1.Address,
+		T1.UsedFlag,T1.State,T1.Creator, T1.CreateTime, T1.LastEditor,
+		T1.LastEditTime,T1.Remark
+		from CapFaces as T1
+		left join Cameras as T2 on
+		T1.CameraID=T2.ID
+		where T2.Remark = #{deviceID,jdbcType=VARCHAR}
+		and T1.CreateTime &gt;= #{lastime,jdbcType=TIMESTAMP}
+		and T1.CreateTime &lt;= #{nowtime,jdbcType=TIMESTAMP}
+		and T1.Feature &lt;&gt; ''
+	</select>
+	<select id="selectByPara" resultMap="CapFacesInfoBeanBaseResultMap" parameterType="map">
+		select top(#{maxReturn}) T1.ID, T1.FaceURL, T1.BackgroundURL,
+		T1.Address, CONVERT(varchar(100), T1.CreateTime, 20) as CapFacesTime
+		from CapFaces as T1
+		left join Cameras as T2 on T1.CameraID = T2.ID
+		left join Hosts as T3 on T2.HostID = T3.ID
+		<where>
+			<if test="lastime != null">
+				T1.CreateTime &gt;= #{lastime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="nowtime != null">
+				and T1.CreateTime &lt;= #{nowtime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="cameraID != null and departmentID != null">
+				and T2.Remark = #{cameraID,jdbcType=VARCHAR}
+				and T3.Remark = #{departmentID,jdbcType=VARCHAR}
+			</if>
+			<if test="cameraID == null and departmentID != null">
+				and T2.ID in (select T2.ID from cameras as T2
+				left join Hosts as T3 on T2.HostID = T3.ID where
+				T3.Remark = #{departmentID,jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+	<select id="selectByCameraIDTo10" resultMap="BaseResultMap"
+		parameterType="map">
+		select top(10) T1.ID, T1.CameraID, T1.FaceURL, T1.BackgroundURL,
+		T1.CameraName, T1.Address,
+		T1.UsedFlag,T1.State,T1.Creator, T1.CreateTime, T1.LastEditor,
+		T1.LastEditTime,T1.Remark
+		from CapFaces as T1
+		left join Cameras as T2 on
+		T1.CameraID=T2.ID
+		where T2.Remark = #{deviceID,jdbcType=VARCHAR}
+		order by T1.CreateTime desc
+	</select>
+</mapper>

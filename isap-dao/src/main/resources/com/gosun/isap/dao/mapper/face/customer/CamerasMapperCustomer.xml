@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gosun.isap.dao.mapper.face.customer.CamerasMapperCustomer">
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.face.Cameras">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="HostID" jdbcType="INTEGER" property="hostid" />
+    <result column="Name" jdbcType="VARCHAR" property="name" />
+    <result column="Code" jdbcType="VARCHAR" property="code" />
+    <result column="IP" jdbcType="VARCHAR" property="ip" />
+    <result column="Port" jdbcType="INTEGER" property="port" />
+    <result column="Chanel" jdbcType="INTEGER" property="chanel" />
+    <result column="UserName" jdbcType="VARCHAR" property="username" />
+    <result column="Password" jdbcType="VARCHAR" property="password" />
+    <result column="Address" jdbcType="VARCHAR" property="address" />
+    <result column="X" jdbcType="REAL" property="x" />
+    <result column="Y" jdbcType="REAL" property="y" />
+    <result column="UsedFlag" jdbcType="INTEGER" property="usedflag" />
+    <result column="State" jdbcType="INTEGER" property="state" />
+    <result column="Creator" jdbcType="VARCHAR" property="creator" />
+    <result column="CreateTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="LastEditor" jdbcType="VARCHAR" property="lasteditor" />
+    <result column="LastEditTime" jdbcType="TIMESTAMP" property="lastedittime" />
+    <result column="Remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List_T1">
+    T1.ID, T1.HostID, T1.Name, T1.Code, T1.IP, T1.Port, T1.Chanel, T1.UserName, T1.Password, T1.Address,
+    T1.X, T1.Y, T1.UsedFlag, T1.State, T1.Creator, T1.CreateTime, T1.LastEditor, T1.LastEditTime, T1.Remark 
+  </sql>
+  <select id="selectbyDepartmentID" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List_T1"/>
+    from Cameras as T1
+    left join Hosts as T2 on T1.HostID=T2.ID
+    where T2.Remark = #{departmentID,jdbcType=VARCHAR}
+    group by <include refid="Base_Column_List_T1"/>
+  </select>
+  <select id="selectbyRemarkToID" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select id from Cameras where Remark = #{remark,jdbcType=VARCHAR}
+  </select>
+</mapper>

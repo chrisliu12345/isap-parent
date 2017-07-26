@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd  
+        http://code.alibabatech.com/schema/dubbo        
+		http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd ">
+
+	<!--    <context:component-scan base-package="com.gosun.isap.system.config"></context:component-scan> -->
+    <!-- 和本地bean一样实现服务 -->
+    <bean id="systemConfigApi" class="com.gosun.isap.system.config.impl.SystemConfigApiImpl" />
+    <bean id="runtimeLogApi" class="com.gosun.isap.system.config.impl.RuntimeLogApiImpl"/>
+
+    <!-- 声明需要暴露的服务接口，使用rest协议暴露 -->
+    <dubbo:service interface="com.gosun.isap.system.config.api.ISystemConfigApi"
+                   ref="systemConfigApi" protocol="rest" filter="authorityFilter,restExceptionFilter"/>
+
+	<!--不鉴权-->
+    <dubbo:service interface="com.gosun.isap.system.config.api.IRuntimeLogApi"
+                   ref="runtimeLogApi" protocol="rest" filter="restExceptionFilter"/>
+</beans>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<context id="testTables" targetRuntime="MyBatis3">
+		<!-- 分页插件 -->
+		<plugin type="com.gosun.mybatis.generator.plugin.MySQLLimitPlugin" />
+        <!-- 序列化插件 -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+		
+		<plugin type="com.gosun.mybatis.generator.plugin.FuzzyQueryPlugin" />
+		
+        <commentGenerator>
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+        
+		<!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://191.191.16.120:3306/isap" userId="root"
+			password="root">
+		</jdbcConnection>
+		<!-- <jdbcConnection driverClass="oracle.jdbc.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@127.0.0.1:1521:yycg" 
+			userId="yycg"
+			password="yycg">
+		</jdbcConnection> -->
+
+		<!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 和 
+			NUMERIC 类型解析为java.math.BigDecimal -->
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- targetProject:生成PO类的位置 -->
+		<javaModelGenerator targetPackage="com.gosun.isap.dao.po"
+			targetProject="..\..\isap-dao\src\main\java">
+			<!-- enableSubPackages:是否让schema作为包的后缀 -->
+			<property name="enableSubPackages" value="false" />
+			<!-- 从数据库返回的值被清理前后的空格 -->
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+        <!-- targetProject:mapper映射文件生成的位置 -->
+		<sqlMapGenerator targetPackage="com.gosun.isap.dao.mapper" 
+			targetProject="..\..\isap-dao\src\main\resources">
+			<!-- enableSubPackages:是否让schema作为包的后缀 -->
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+		<!-- targetPackage：mapper接口生成的位置 -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.gosun.isap.dao.mapper" 
+			targetProject="..\..\isap-dao\src\main\java">
+			<!-- enableSubPackages:是否让schema作为包的后缀 -->
+			<property name="enableSubPackages" value="false" />
+		</javaClientGenerator>
+        
+		<!-- 指定数据库表 -->
+        <table tableName="t_action">
+		     <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+		     <ignoreColumn column="add_time" />
+		     <ignoreColumn column="update_time" />
+		</table>
+        <table tableName="t_action_linkage">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+			<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_action_param">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_alarm_record">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_alarm_type">
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_alert">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_alert_detail">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_alert_log">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_alert_time_limit">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_department"></table>
+        <table tableName="t_dev_authdef">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_device">
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_enum">
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_guard">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_guard_group">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_guard_group_belong">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_guard_plan">
+             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_guard_plan_res">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_guard_single_time">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_guard_time_template">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_guard_week_time">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_menu_authdef">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_operlog">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_plat">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_preset">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_role">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_role_dep">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_role_dev_auth">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_role_menu_auth">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_user">
+			<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+			<ignoreColumn column="add_time" />
+			<ignoreColumn column="update_time" />
+		</table>
+        <table tableName="t_user_belong">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_user_device_auth">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_version">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_version_history">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+        <table tableName="t_version_judge">
+        	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        	<ignoreColumn column="add_time" />
+		    <ignoreColumn column="update_time" />
+        </table>
+
+		<!-- 有些表的字段需要指定java类型
+		 <table schema="" tableName="">
+			<columnOverride column="" javaType="" />
+		</table> -->
+	</context>
+</generatorConfiguration>

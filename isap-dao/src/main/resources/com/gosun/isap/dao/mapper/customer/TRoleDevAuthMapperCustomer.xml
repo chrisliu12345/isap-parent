@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.customer.TRoleDevAuthMapperCustomer">
+	<resultMap id="RoleAuthMap"
+		type="com.gosun.isap.dao.po.customer.DeviceDevAuthInfo">
+		<id column="devId" property="device.id" jdbcType="CHAR" />
+		<result column="plat_id" property="device.platId" jdbcType="BIGINT" />
+		<result column="code" property="device.code" jdbcType="VARCHAR" />
+		<result column="devName" property="device.name" jdbcType="VARCHAR" />
+		<result column="dev_type" property="device.devType" jdbcType="VARCHAR" />
+		<result column="status" property="device.status" jdbcType="TINYINT" />
+		<result column="net_status" property="device.netStatus"
+			jdbcType="TINYINT" />
+		<result column="parent" property="device.parent" jdbcType="CHAR" />
+		<result column="department_id" property="device.departmentId"
+			jdbcType="CHAR" />
+		<result column="location_x" property="device.locationX"
+			jdbcType="VARCHAR" />
+		<result column="location_y" property="device.locationY"
+			jdbcType="VARCHAR" />
+		<result column="brief_name" property="device.briefName"
+			jdbcType="VARCHAR" />
+		<result column="name_spell" property="device.nameSpell"
+			jdbcType="CHAR" />
+		<result column="description" property="device.description"
+			jdbcType="VARCHAR" />
+		<result column="devId" property="devId" jdbcType="CHAR" />
+		<result column="id" property="authId" />
+		<result column="name" property="name" />
+		<result column="permission" property="permission" />
+		<result column="dev_type" property="devType" />
+	</resultMap>
+	<sql id="device_Column">
+		c.id as "devId", c.plat_id, c.code, c.name as "devName", c.dev_type, c.status, c.net_status,
+		c.parent, c.department_id, c.location_x,
+		c.location_y, c.brief_name, c.name_spell, c.description,
+	</sql>
+	<select id="getRoleDevAuthList" resultMap="RoleAuthMap"
+		parameterType="java.lang.Long">
+		SELECT
+		<include refid="device_Column" />
+		a.dev_id,b.id,b.name,b.permission,b.dev_type
+		FROM
+		t_role_dev_auth a
+		LEFT
+		JOIN t_dev_authdef b ON b.id=a.auth_id LEFT JOIN t_device c ON
+		c.id=a.dev_id
+		WHERE
+		a.role_id=#{roleId}
+	</select>
+</mapper>

@@ -1,0 +1,8 @@
+{
+	"name": "isap",
+	"title": "isap restful API",
+	"description":"isap API接口文档",
+	"url" : "http://191.191.16.120:8888/api/v1",
+	"sampleUrl" : "http://191.191.16.120:8888/api/v1",
+	"version": "1.0.0"
+}

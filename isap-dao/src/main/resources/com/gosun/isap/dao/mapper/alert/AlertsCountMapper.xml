@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gosun.isap.dao.mapper.alert.AlertsCountMapper">
+    <select id="countByDepartmentsAndStatus" resultType="java.lang.Integer">
+        select count(*) from t_alert
+        <where>
+            status = #{status}
+            <if test="ids != null and ida.size() &gt; 0">
+                AND department_id in
+                <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="totalCountByDepartments" resultType="java.lang.Integer">
+        select count(*) from t_alert
+        <where>
+            <if test="ids != null and ids.size() &gt; 0">
+                department_id in
+                <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and A.add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and A.add_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+    <select id="countConfirmedInResponseTime" resultType="java.lang.Integer">
+        select count(*) from t_alert where user_id = #{userId} and confirm_end_time > #{start} and status > 0
+        <if test="end != null">
+            and confirm_end_time &lt; #{end}
+        </if>
+        <if test="end == null">
+            and confirm_end_time &lt;now()
+        </if>
+
+    </select>
+    <select id="countFalseInResponseTime" resultType="java.lang.Integer">
+        select count(*) from t_alert
+        <where>
+            user_id = #{userId}
+            and status > 0
+            <if test="start != null">
+                and confirm_end_time > #{start}
+            </if>
+            <if test="start == null">
+                and false
+            </if>
+            <if test="end != null">
+                and confirm_end_time &lt;#{end}
+            </if>
+            <if test="end == null">
+                and confirm_end_time &lt; now()
+            </if>
+        </where>
+    </select>
+
+    <select id="countByTypeStatusDepartment" resultType="java.lang.Integer">
+        select count(*) from t_alert
+        <where>
+            <if test="type != null">
+                and alert_type = #{type}
+            </if>
+
+            <if test="status != null">
+                and status = #{status}
+            </if>
+
+            <if test="departmentId != null">
+                and department_id = #{departmentId}
+            </if>
+
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+
+            <if test="end != null">
+                and confirm_end_time &lt; #{end}
+            </if>
+        </where>
+    </select>
+
+    <select id="countByTypeStatusDepartments" resultType="java.lang.Integer">
+        select count(*) from t_alert
+        <where>
+            <if test="type != null">
+                and alert_type = #{type}
+            </if>
+
+            <if test="status != null">
+                and status = #{status}
+            </if>
+
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+
+            <if test="end != null">
+                and confirm_end_time &lt; #{end}
+            </if>
+
+            <if test="ids != null and ids.size() &gt; 0">
+                AND department_id in
+                <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="countByTypeStatusSectionAndDepartment" resultType="java.lang.Integer">
+        select count(*) from t_alert
+        <where>
+            <if test="typeInterval != null">
+                <if test="typeInterval.lowerLimit != null">
+                    and alert_type &gt; #{typeInterval.lowerLimit}
+                </if>
+                <if test="typeInterval.upperLimit != null">
+                    and alert_type &lt; #{typeInterval.upperLimit}
+                </if>
+            </if>
+
+            <if test="statusInterval != null">
+                <if test="statusInterval.lowerLimit != null">
+                    and status &gt; #{statusInterval.lowerLimit}
+                </if>
+                <if test="statusInterval.upperLimit != null">
+                    and status &lt; #{statusInterval.upperLimit}
+                </if>
+            </if>
+
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+
+            <if test="end != null">
+                and confirm_end_time &lt; #{end}
+            </if>
+
+            AND department_id = #{departmentId}
+
+        </where>
+    </select>
+    <select id="countByTypeStatusIntervalAndDepartments" resultType="java.lang.Integer">
+        select count(*) from t_alert
+        <where>
+            <if test="typeInterval != null">
+                <if test="typeInterval.lowerLimit != null">
+                    and alert_type &gt; #{typeInterval.lowerLimit}
+                </if>
+                <if test="typeInterval.upperLimit != null">
+                    and alert_type &lt; #{typeInterval.upperLimit}
+                </if>
+            </if>
+
+            <if test="statusInterval != null">
+                <if test="statusInterval.lowerLimit != null">
+                    and status &gt; #{statusInterval.lowerLimit}
+                </if>
+                <if test="statusInterval.upperLimit != null">
+                    and status &lt; #{statusInterval.upperLimit}
+                </if>
+            </if>
+
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+
+            <if test="end != null">
+                and confirm_end_time &lt; #{end}
+            </if>
+
+            <if test="ids != null and ids.size() &gt; 0">
+                AND department_id in
+                <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="countUnprocessedAlerts" resultType="java.lang.Integer">
+        select count(*) from t_alert
+        <where>
+            <if test="departmentIds == null or departmentIds.size() == 0">
+                and false
+            </if>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentIds" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+                and (confirm_end_time &gt; #{end} or confirm_end_time is null)
+            </if>
+            <if test="end == null">
+                and add_time &lt; now()
+                and confirm_end_time is null
+            </if>
+        </where>
+    </select>
+    <select id="countQuestionedSuspectAlerts" resultType="java.lang.Integer">
+        select count(*) from t_alert_log where log_type = 11 and alert_id in(
+        select id from t_alert
+        <where>
+            <if test="departmentIds != null and departmentIds.size() &gt; 0">
+                and department_id in
+                <foreach collection="departmentIds" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="start != null">
+                and add_time &gt; #{start}
+            </if>
+            <if test="end != null">
+                and add_time &lt; #{end}
+            </if>
+        </where>
+        )
+    </select>
+</mapper>

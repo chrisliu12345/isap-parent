@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd  
+        http://code.alibabatech.com/schema/dubbo        
+		http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.gosun.isap.warn"></context:component-scan>
+	<aop:aspectj-autoproxy/>  
+	
+	<bean id="connPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">   
+	    <property name="order" value="1" />   
+	    <property name="ignoreUnresolvablePlaceholders" value="true" />   
+	    <property name="location">
+	    	<value>classpath:conn.properties</value>
+	    </property>
+	</bean>
+
+	<bean id="messageSubscriber" class="com.gosun.isap.common.mc.MessageSubscriber" scope="singleton">
+		<constructor-arg index="0" value="${brokerURL}" />
+	</bean>
+	
+	<bean id="alarmProcessor" class="com.gosun.isap.warn.impl.alarm.service.AlarmMessageProcessor" />
+	<bean id="guardPlanApi" class="com.gosun.isap.warn.impl.guard.GuardPlanApiImpl" />
+	<bean id="timeTemplateApi" class="com.gosun.isap.warn.impl.guard.TimeTemplateApiImpl" />
+	<bean id="alarmLinkageApi" class="com.gosun.isap.warn.impl.linkage.AlarmLinkageApiImpl" />
+	<bean id="alarmReportApi" class="com.gosun.isap.warn.impl.report.AlarmReportApiImpl" />
+	<bean id="alarmManager" class="com.gosun.isap.warn.impl.alarm.service.AlarmManager" init-method="init" />
+	<bean id="alarmSubscriber" class="com.gosun.isap.warn.impl.alarm.service.AlarmSubscriber" init-method="init" >
+		<property name="subscriber" ref="messageSubscriber" />
+		<property name="processor" ref="alarmProcessor" />
+	</bean>
+ 	<!--布防调度服务-->
+ 	<bean id="schedulerService" class="com.gosun.isap.warn.impl.guard.job.impl.JobSchedulerImpl" scope="singleton" />
+ 	
+	<dubbo:service interface="com.gosun.isap.warn.api.guard.IGuardPlanApi" ref="guardPlanApi" protocol="rest" filter="authorityFilter,restExceptionFilter" />
+	<dubbo:service interface="com.gosun.isap.warn.api.guard.ITimeTemplateApi" ref="timeTemplateApi" protocol="rest" filter="authorityFilter,restExceptionFilter" />
+	<dubbo:service interface="com.gosun.isap.warn.api.linkage.AlarmLinkageApi" ref="alarmLinkageApi" protocol="rest" filter="authorityFilter,restExceptionFilter" />
+	<dubbo:service interface="com.gosun.isap.warn.api.report.AlarmReportApi" ref="alarmReportApi" protocol="rest" filter="authorityFilter,restExceptionFilter" />
+	
+</beans>

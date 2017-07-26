@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gosun.isap.dao.mapper.alert.base.AlertBaseMapper">
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.alert.base.BaseAlert">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="reason" jdbcType="TINYINT" property="reason" />
+    <result column="dev_id" jdbcType="CHAR" property="devId" />
+    <result column="department_id" jdbcType="CHAR" property="departmentId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="is_over_time" jdbcType="BIT" property="isOverTime" />
+    <result column="alert_type" jdbcType="TINYINT" property="alertType" />
+    <result column="unprocessed_alerts" jdbcType="INTEGER" property="unprocessedAlerts" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="confirm_start_time" jdbcType="TIMESTAMP" property="confirmStartTime" />
+    <result column="confirm_end_time" jdbcType="TIMESTAMP" property="confirmEndTime" />
+    <result column="confirm_time" jdbcType="INTEGER" property="confirmTime" />
+    <result column="confirmed_alerts" jdbcType="INTEGER" property="confirmedAlerts" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="confirm_desc" jdbcType="VARCHAR" property="confirmDesc" />
+    <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, description, reason, dev_id, department_id, status, is_over_time, alert_type, 
+    unprocessed_alerts, add_time, confirm_start_time, confirm_end_time, confirm_time, 
+    confirmed_alerts, user_id, confirm_desc, finish_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_alert
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_alert
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.gosun.isap.dao.po.alert.base.BaseAlert">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_alert (description, reason, dev_id, 
+      department_id, status, is_over_time, 
+      alert_type, unprocessed_alerts, add_time, 
+      confirm_start_time, confirm_end_time, confirm_time, 
+      confirmed_alerts, user_id, confirm_desc, 
+      finish_time)
+    values (#{description,jdbcType=VARCHAR}, #{reason,jdbcType=TINYINT}, #{devId,jdbcType=CHAR}, 
+      #{departmentId,jdbcType=CHAR}, #{status,jdbcType=TINYINT}, #{isOverTime,jdbcType=BIT}, 
+      #{alertType,jdbcType=TINYINT}, #{unprocessedAlerts,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}, 
+      #{confirmStartTime,jdbcType=TIMESTAMP}, #{confirmEndTime,jdbcType=TIMESTAMP}, #{confirmTime,jdbcType=INTEGER}, 
+      #{confirmedAlerts,jdbcType=INTEGER}, #{userId,jdbcType=BIGINT}, #{confirmDesc,jdbcType=VARCHAR}, 
+      #{finishTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gosun.isap.dao.po.alert.base.BaseAlert">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_alert
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="description != null">
+        description,
+      </if>
+      <if test="reason != null">
+        reason,
+      </if>
+      <if test="devId != null">
+        dev_id,
+      </if>
+      <if test="departmentId != null">
+        department_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="isOverTime != null">
+        is_over_time,
+      </if>
+      <if test="alertType != null">
+        alert_type,
+      </if>
+      <if test="unprocessedAlerts != null">
+        unprocessed_alerts,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="confirmStartTime != null">
+        confirm_start_time,
+      </if>
+      <if test="confirmEndTime != null">
+        confirm_end_time,
+      </if>
+      <if test="confirmTime != null">
+        confirm_time,
+      </if>
+      <if test="confirmedAlerts != null">
+        confirmed_alerts,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="confirmDesc != null">
+        confirm_desc,
+      </if>
+      <if test="finishTime != null">
+        finish_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null">
+        #{reason,jdbcType=TINYINT},
+      </if>
+      <if test="devId != null">
+        #{devId,jdbcType=CHAR},
+      </if>
+      <if test="departmentId != null">
+        #{departmentId,jdbcType=CHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isOverTime != null">
+        #{isOverTime,jdbcType=BIT},
+      </if>
+      <if test="alertType != null">
+        #{alertType,jdbcType=TINYINT},
+      </if>
+      <if test="unprocessedAlerts != null">
+        #{unprocessedAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confirmStartTime != null">
+        #{confirmStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confirmEndTime != null">
+        #{confirmEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confirmTime != null">
+        #{confirmTime,jdbcType=INTEGER},
+      </if>
+      <if test="confirmedAlerts != null">
+        #{confirmedAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="confirmDesc != null">
+        #{confirmDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTime != null">
+        #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gosun.isap.dao.po.alert.base.BaseAlert">
+    update t_alert
+    <set>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null">
+        reason = #{reason,jdbcType=TINYINT},
+      </if>
+      <if test="devId != null">
+        dev_id = #{devId,jdbcType=CHAR},
+      </if>
+      <if test="departmentId != null">
+        department_id = #{departmentId,jdbcType=CHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isOverTime != null">
+        is_over_time = #{isOverTime,jdbcType=BIT},
+      </if>
+      <if test="alertType != null">
+        alert_type = #{alertType,jdbcType=TINYINT},
+      </if>
+      <if test="unprocessedAlerts != null">
+        unprocessed_alerts = #{unprocessedAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confirmStartTime != null">
+        confirm_start_time = #{confirmStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confirmEndTime != null">
+        confirm_end_time = #{confirmEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="confirmTime != null">
+        confirm_time = #{confirmTime,jdbcType=INTEGER},
+      </if>
+      <if test="confirmedAlerts != null">
+        confirmed_alerts = #{confirmedAlerts,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="confirmDesc != null">
+        confirm_desc = #{confirmDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTime != null">
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gosun.isap.dao.po.alert.base.BaseAlert">
+    update t_alert
+    set description = #{description,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=TINYINT},
+      dev_id = #{devId,jdbcType=CHAR},
+      department_id = #{departmentId,jdbcType=CHAR},
+      status = #{status,jdbcType=TINYINT},
+      is_over_time = #{isOverTime,jdbcType=BIT},
+      alert_type = #{alertType,jdbcType=TINYINT},
+      unprocessed_alerts = #{unprocessedAlerts,jdbcType=INTEGER},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      confirm_start_time = #{confirmStartTime,jdbcType=TIMESTAMP},
+      confirm_end_time = #{confirmEndTime,jdbcType=TIMESTAMP},
+      confirm_time = #{confirmTime,jdbcType=INTEGER},
+      confirmed_alerts = #{confirmedAlerts,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=BIGINT},
+      confirm_desc = #{confirmDesc,jdbcType=VARCHAR},
+      finish_time = #{finishTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_alert 
+    <if test="limit != null and limit.length() > 0">
+    limit ${limit}
+    </if>
+  </select>
+  <select id="selectAllAndSort" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List" /> 
+        from t_alert 
+        <if test="orderBy != null and orderBy.size() &gt; 0">
+            order by
+            <foreach collection="orderBy" separator="," item="column">
+                ${column}
+            </foreach>
+        </if>
+        <if test="limit != null and limit.length() > 0">
+            limit ${limit}
+        </if>
+  </select>
+  <select id="selectByColumn" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_alert 
+        <where>
+            <if test="column == null">
+                false
+            </if>
+            <if test="column != null and value != null ">
+                ${column} = #{value}
+            </if>
+            <if test="column != null and value == null">
+                ${column} is null
+            </if>
+        </where>
+        <if test="limit != null and limit.length() > 0">
+            limit ${limit}
+        </if>
+  </select>
+  <select id="selectByColumnAndSort" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_alert 
+        <where>
+            <if test="column == null">
+                false
+            </if>
+            <if test="column != null and value != null ">
+                ${column} = #{value}
+            </if>
+            <if test="column != null and value == null">
+                ${column} is null
+            </if>
+        </where>
+        <if test="orderBy != null and orderBy.size() &gt; 0">
+            order by
+            <foreach collection="orderBy" separator="," item="column">
+                ${column}
+            </foreach>
+        </if>
+        <if test="limit != null and limit.length() > 0">
+            limit ${limit}
+        </if>
+  </select>
+  <select id="selectFirstByColumn" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_alert 
+        <where>
+            <if test="column == null">
+                false
+            </if>
+            <if test="column != null and value != null ">
+                ${column} = #{value}
+            </if>
+            <if test="column != null and value == null">
+                ${column} is null
+            </if>
+        </where>
+    limit 1
+  </select>
+  <select id="selectByColumns" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_alert
+        <where>
+            <if test="map == null or map.size() == 0">
+                false
+            </if>
+            <if test="map != null and map.size &gt; 0">
+                <foreach collection="map" index="column" item="value">
+                    <if test="column != null and value != null">
+                        AND ${column} = #{value}
+                    </if>
+                    <if test="column != null and value == null">
+                        AND ${column} is null
+                    </if>
+                    <if test="map.size() == 1 and column == null">
+                        and false
+                    </if>
+                </foreach>
+            </if>
+        </where>
+        <if test="limit != null and limit.length() > 0">
+            limit ${limit}
+        </if>
+  </select>
+  <select id="selectByColumnsAndSort" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_alert
+        <where>
+            <if test="map == null or map.size() == 0">
+                false
+            </if>
+            <if test="map != null and map.size &gt; 0">
+                <foreach collection="map" index="column" item="value">
+                    <if test="column != null and value != null">
+                        AND ${column} = #{value}
+                    </if>
+                    <if test="column != null and value == null">
+                        AND ${column} is null
+                    </if>
+                    <if test="map.size() == 1 and column == null">
+                        and false
+                    </if>
+                </foreach>
+            </if>
+        </where>
+        <if test="orderBy != null and orderBy.size() &gt; 0">
+            order by
+            <foreach collection="orderBy" separator="," item="column">
+                ${column}
+            </foreach>
+        </if>
+        <if test="limit != null and limit.length() > 0">
+            limit ${limit}
+        </if>
+  </select>
+  <select id="selectFirstByColumns" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" /> 
+    from t_alert
+        <where>
+            <if test="map == null or map.size() == 0">
+                false
+            </if>
+            <if test="map != null and map.size &gt; 0">
+                <foreach collection="map" index="column" item="value">
+                    <if test="column != null and value != null">
+                        AND ${column} = #{value}
+                    </if>
+                    <if test="column != null and value == null">
+                        AND ${column} is null
+                    </if>
+                    <if test="map.size() == 1 and column == null">
+                        and false
+                    </if>
+                </foreach>
+            </if>
+        </where>
+    limit 1
+  </select>
+  <select id="totalCount" resultType="int">
+    select count(*) from t_alert
+  </select>
+  <select id="countByColumn" resultType="int">
+    select count(*) from t_alert
+        <where>
+            <if test="column == null">
+                false
+            </if>
+            <if test="column != null and value != null ">
+                ${column} = #{value}
+            </if>
+            <if test="column != null and value == null">
+                ${column} is null
+            </if>
+        </where>
+  </select>
+  <select id="countByColumns" resultType="int">
+    select
+    count(*) 
+    from t_alert
+        <where>
+            <if test="map == null or map.size() == 0">
+                false
+            </if>
+            <if test="map != null and map.size &gt; 0">
+                <foreach collection="map" index="column" item="value">
+                    <if test="column != null and value != null">
+                        AND ${column} = #{value}
+                    </if>
+                    <if test="column != null and value == null">
+                        AND ${column} is null
+                    </if>
+                    <if test="map.size() == 1 and column == null">
+                        and false
+                    </if>
+                </foreach>
+            </if>
+        </where>
+  </select>
+  <delete id="deleteByColumn">
+    delete from t_alert where 
+        <if test="column != null and value != null">
+            ${column} = #{value}
+        </if>
+        <if test="column != null and value == null">
+            ${column} is null
+        </if>
+        <if test="column == null">
+            false
+        </if>
+  </delete>
+  <delete id="deleteByColumns">
+    delete from t_alert
+        <where>
+            <if test="map == null or map.size() == 0">
+                false
+            </if>
+            <if test="map != null and map.size &gt; 0">
+                <foreach collection="map" index="column" item="value">
+                    <if test="column != null and value != null">
+                        AND ${column} = #{value}
+                    </if>
+                    <if test="column != null and value == null">
+                        AND ${column} is null
+                    </if>
+                    <if test="map.size() == 1 and column == null">
+                        and false
+                    </if>
+                </foreach>
+            </if>
+        </where>
+  </delete>
+</mapper>

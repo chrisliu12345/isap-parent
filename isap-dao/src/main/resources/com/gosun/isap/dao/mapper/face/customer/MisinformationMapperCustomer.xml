@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.gosun.isap.dao.mapper.face.customer.MisinformationMapperCustomer">
+	<resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.face.Misinformation">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="listType" property="listtype" jdbcType="INTEGER" />
+		<result column="listFeature" property="listfeature" jdbcType="VARCHAR" />
+		<result column="listFaceURL" property="listfaceurl" jdbcType="VARCHAR" />
+		<result column="faceURL" property="faceurl" jdbcType="VARCHAR" />
+		<result column="backGroundURL" property="backgroundurl"
+			jdbcType="VARCHAR" />
+		<result column="similarity" property="similarity" jdbcType="DOUBLE" />
+		<result column="capFacesTime" property="capfacestime" jdbcType="TIMESTAMP" />
+		<result column="cameraAddress" property="cameraaddress"
+			jdbcType="VARCHAR" />
+		<result column="editTime" property="edittime" jdbcType="TIMESTAMP" />
+		<result column="editor" property="editor" jdbcType="VARCHAR" />
+		<result column="capfaceID" property="capfaceid" jdbcType="INTEGER" />
+		<result column="blacklistID" property="blacklistid" jdbcType="INTEGER" />
+		<result column="editorID" property="editorid" jdbcType="INTEGER" />
+		<result column="departmentName" property="departmentname"
+			jdbcType="VARCHAR" />
+		<result column="departmentID" property="departmentid" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List_T1">
+		T1.ID, T1.listType,
+		T1.listFaceURL, T1.faceURL,
+		T1.backGroundURL, T1.similarity,
+		T1.capFacesTime, T1.cameraAddress,
+		T1.editTime, T1.editor,
+		T1.capfaceID,
+		T1.blacklistID,T1.departmentName,T1.departmentID
+	</sql>
+
+	<select id="selectByListFilterParaBean" parameterType="com.gosun.isap.dao.po.face.ListFilterParaBean"
+		resultMap="BaseResultMap">
+		select top(${listFilterParaBean.limit})
+		<include refid="Base_Column_List_T1" />
+		from Misinformation as T1
+		left join Capfaces
+		as T2 on T1.capfaceID = T2.ID
+		left join Cameras as T3 on T2.CameraID = T3.ID
+		left join Hosts as T4 on T3.HostID = T4.ID
+		<where>
+			<if test="listFilterParaBean.listType != null">
+				T1.listType = #{listFilterParaBean.listType,jdbcType=INTEGER}
+			</if>
+			<if test="listFilterParaBean.startTime != null">
+				and T1.editTime &gt;= #{listFilterParaBean.startTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="listFilterParaBean.endTime != null">
+				and T1.editTime &lt;= #{listFilterParaBean.endTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="listFilterParaBean.cameraID != null and listFilterParaBean.departmentID != null">
+				and T3.Remark = #{listFilterParaBean.cameraID,jdbcType=VARCHAR}
+				and T4.Remark
+				= #{listFilterParaBean.departmentID,jdbcType=VARCHAR}
+			</if>
+			<if test="listFilterParaBean.cameraID == null and listFilterParaBean.departmentID != null">
+				and T2.CameraID in (select T3.ID from cameras as T3
+				left
+				join Hosts as T4 on T3.HostID = T4.ID where
+				T4.Remark =
+				#{listFilterParaBean.departmentID,jdbcType=VARCHAR})
+			</if>
+			<if test="userID != null">
+				and T1.editorID = #{userID,jdbcType=VARCHAR}
+			</if>
+			and T1.ID NOT IN (
+			select top(${listFilterParaBean.start}) T1.ID
+			from Misinformation as T1
+			left join Capfaces as T2 on T1.capfaceID = T2.ID
+			left join Cameras as
+			T3 on T2.CameraID = T3.ID
+			left join Hosts as T4 on T3.HostID = T4.ID
+			left join Contacts as T5 on T5.ID = T1.editorID
+			<where>
+				<if test="userID != null">
+					and T1.editorID = #{userID,jdbcType=VARCHAR}
+				</if>
+				<if test="listFilterParaBean.listType != null">
+					and T1.listType = #{listFilterParaBean.listType,jdbcType=INTEGER}
+				</if>
+				<if test="listFilterParaBean.startTime != null">
+					and T1.editTime &gt;= #{listFilterParaBean.startTime,jdbcType=TIMESTAMP}
+				</if>
+				<if test="listFilterParaBean.endTime != null">
+					and T1.editTime &lt;= #{listFilterParaBean.endTime,jdbcType=TIMESTAMP}
+				</if>
+				<if test="listFilterParaBean.cameraID != null and listFilterParaBean.departmentID != null">
+					and T3.Remark = #{listFilterParaBean.cameraID,jdbcType=VARCHAR}
+					and
+					T4.Remark
+					= #{listFilterParaBean.departmentID,jdbcType=VARCHAR}
+				</if>
+				<if test="listFilterParaBean.cameraID == null and listFilterParaBean.departmentID != null">
+					and T2.CameraID in (select T3.ID from cameras as T3
+					left
+					join Hosts as T4 on T3.HostID = T4.ID where
+					T4.Remark =
+					#{listFilterParaBean.departmentID,jdbcType=VARCHAR})
+				</if>
+			</where>
+			group by T1.ID
+			)
+		</where>
+		group by
+		<include refid="Base_Column_List_T1" />
+	</select>
+
+	<select id="countByListFilterParaBean" parameterType="com.gosun.isap.dao.po.face.ListFilterParaBean"
+		resultType="java.lang.Integer">
+		select count(*) from
+		(
+		select T1.ID
+		from Misinformation as T1
+		left join
+		Capfaces as T2 on T1.capfaceID = T2.ID
+		left join Cameras as T3 on
+		T2.CameraID = T3.ID
+		left join Hosts as T4 on T3.HostID = T4.ID
+		<where>
+			<if test="userID != null">
+				T1.editorID = #{userID,jdbcType=VARCHAR}
+			</if>
+			<if test="listFilterParaBean.listType != null">
+				and T1.listType = #{listFilterParaBean.listType,jdbcType=INTEGER}
+			</if>
+			<if test="listFilterParaBean.startTime != null">
+				and T1.editTime &gt;= #{listFilterParaBean.startTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="listFilterParaBean.endTime != null">
+				and T1.editTime &lt;= #{listFilterParaBean.endTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="listFilterParaBean.cameraID != null and listFilterParaBean.departmentID != null">
+				and T3.Remark = #{listFilterParaBean.cameraID,jdbcType=VARCHAR}
+				and T4.Remark
+				= #{listFilterParaBean.departmentID,jdbcType=VARCHAR}
+			</if>
+			<if test="listFilterParaBean.cameraID == null and listFilterParaBean.departmentID != null">
+				and T2.CameraID in (select T3.ID from cameras as T3
+				left
+				join Hosts as T4 on T3.HostID = T4.ID where
+				T4.Remark =
+				#{listFilterParaBean.departmentID,jdbcType=VARCHAR})
+			</if>
+		</where>
+		group by T1.ID
+		) as T5
+	</select>
+</mapper>

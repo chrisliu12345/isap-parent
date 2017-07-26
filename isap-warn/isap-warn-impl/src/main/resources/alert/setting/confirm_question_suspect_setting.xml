@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<table index="0"  handler="com.gosun.isap.warn.impl.alert.export.handler.QuestionSuspectAfterHandler">
+    <body row="3" column="1">
+        <column>areaName</column>
+        <column>communityName</column>
+        <column>alertCreateTime</column>
+        <column>questionSuspectTime</column>
+        <column>guardInfo</column>
+        <column>picture</column>
+        <column>confirm</column>
+    </body>
+    <template resource="alert/template/confirm_question_suspect_template.xls" index="0"/>
+    <style>
+        <date>yyyy-MM-dd HH:mm:ss</date>
+    </style>
+</table>
+

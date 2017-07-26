@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.customer.TRoleMapperCustomer">
+	<resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.customer.TRoleCustomer">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+
+
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+
+
+
+	<select id="getRoleCustomer" resultMap="BaseResultMap"  parameterType="java.lang.Integer">
+		SELECT
+		a.id,a.name,b.dev_id AS "dev_id",c.name AS "dev_name",c.dev_type
+		AS
+		"dev_type",c.permission AS "dev_permission",
+		e.id AS "menu.id",e.name
+		AS "menu_name",e.parent AS "menu_parent",
+		e.permission AS
+		"menu_permission" 
+		FROM
+		t_role a
+		LEFT JOIN t_role_dev_auth b ON a.id=b.role_id
+		LEFT JOIN t_dev_authdef c ON b.auth_id=c.id
+		LEFT JOIN t_role_menu_auth d ON d.role_id=a.id
+		LEFT JOIN t_menu_authdef e ON d.auth_id=e.id
+		
+		<where>
+			a.id=#{roleId}
+		</where>
+	</select>
+
+<select id="getRoleDepCustomer" resultMap="BaseResultMap"  parameterType="java.lang.Integer">
+		SELECT
+		a.id,a.name,
+		g.id AS department_id,g.name AS department_name,
+		g.parent AS department_parent,
+		g.community_flag AS department_community_flag,
+		g.parent_ids AS department_parent_ids
+		FROM
+		t_role a
+		LEFT JOIN t_role_dep f ON a.id=f.role_id
+		LEFT JOIN t_department g ON f.department_id=g.id
+		<where>
+			a.id=#{roleId}
+		</where>
+	</select>
+
+
+
+
+	<!-- t_role_dep(id,role_id,department_id),t_role_dep_auth(id,role_id,auth_id,dev_id),t_role_menu_auth(id,role_id,auth_id,) -->
+	<select id="findRoleDevAuth" resultMap="BaseResultMap"
+		parameterType="com.gosun.isap.dao.po.customer.TRoleCustomer">
+		select t_role.id as '角色ID', t_role.name as '角色名', t_device.name as
+		'设备名称', t_dev_authdef.name as '设备权限名',t_dev_authdef.permission as
+		'权限标识' from t_role
+		left join t_role_dev_auth on t_role.id =t_role_dev_auth.role_id
+		left join t_device on t_device.id =t_role_dev_auth.dev_id
+		left join t_dev_authdef on t_dev_authdef.id =t_role_dev_auth.auth_id
+		<where>
+		t_role.id = #{value};
+		</where>
+		
+
+		
+	</select>
+
+	<select id="findRoleMenuAuth" resultMap="BaseResultMap"
+		parameterType="com.gosun.isap.dao.po.customer.TRoleCustomer">
+		select t_role.id as '角色ID', t_role.name as '角色名', t_menu_authdef.name
+		as '菜单权限名' ,t_menu_authdef.permission as '权限标识' from t_role
+		left join
+		t_role_menu_auth on t_role.id = t_role_menu_auth.role_id
+		left join
+		t_menu_authdef on t_menu_authdef.id = t_role_menu_auth.auth_id
+		<where>
+		t_role.id = #{value};
+		</where>
+
+
+		
+	</select>
+
+
+	<insert id="addRole" parameterType="com.gosun.isap.dao.po.TRole" useGeneratedKeys="true" keyProperty="id">
+		insert into t_role (name)
+		values (#{name,jdbcType=VARCHAR})
+	</insert>
+
+  
+
+
+	<insert id="addRoleSelective" parameterType="com.gosun.isap.dao.po.TRole">
+		insert into t_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<select id="roleCount" parameterType="com.gosun.isap.dao.po.TRoleExample"
+		resultType="java.lang.Long">
+		select count(*) from t_role
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+
+
+</mapper>

@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.face.CamerasMapper" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.face.Cameras" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="HostID" property="hostid" jdbcType="INTEGER" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="Code" property="code" jdbcType="VARCHAR" />
+    <result column="IP" property="ip" jdbcType="VARCHAR" />
+    <result column="Port" property="port" jdbcType="INTEGER" />
+    <result column="Chanel" property="chanel" jdbcType="INTEGER" />
+    <result column="UserName" property="username" jdbcType="VARCHAR" />
+    <result column="Password" property="password" jdbcType="VARCHAR" />
+    <result column="Address" property="address" jdbcType="VARCHAR" />
+    <result column="X" property="x" jdbcType="REAL" />
+    <result column="Y" property="y" jdbcType="REAL" />
+    <result column="UsedFlag" property="usedflag" jdbcType="INTEGER" />
+    <result column="State" property="state" jdbcType="INTEGER" />
+    <result column="Creator" property="creator" jdbcType="VARCHAR" />
+    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="LastEditor" property="lasteditor" jdbcType="VARCHAR" />
+    <result column="LastEditTime" property="lastedittime" jdbcType="TIMESTAMP" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, HostID, Name, Code, IP, Port, Chanel, UserName, Password, Address, X, Y, UsedFlag, 
+    State, Creator, CreateTime, LastEditor, LastEditTime, Remark
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.face.CamerasExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from Cameras
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from Cameras
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from Cameras
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gosun.isap.dao.po.face.CamerasExample" >
+    delete from Cameras
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gosun.isap.dao.po.face.Cameras" >
+    insert into Cameras (ID, HostID, Name, 
+      Code, IP, Port, Chanel, 
+      UserName, Password, Address, 
+      X, Y, UsedFlag, State, 
+      Creator, CreateTime, LastEditor, 
+      LastEditTime, Remark)
+    values (#{id,jdbcType=INTEGER}, #{hostid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{port,jdbcType=INTEGER}, #{chanel,jdbcType=INTEGER}, 
+      #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{x,jdbcType=REAL}, #{y,jdbcType=REAL}, #{usedflag,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, 
+      #{creator,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{lasteditor,jdbcType=VARCHAR}, 
+      #{lastedittime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gosun.isap.dao.po.face.Cameras" >
+    insert into Cameras
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="hostid != null" >
+        HostID,
+      </if>
+      <if test="name != null" >
+        Name,
+      </if>
+      <if test="code != null" >
+        Code,
+      </if>
+      <if test="ip != null" >
+        IP,
+      </if>
+      <if test="port != null" >
+        Port,
+      </if>
+      <if test="chanel != null" >
+        Chanel,
+      </if>
+      <if test="username != null" >
+        UserName,
+      </if>
+      <if test="password != null" >
+        Password,
+      </if>
+      <if test="address != null" >
+        Address,
+      </if>
+      <if test="x != null" >
+        X,
+      </if>
+      <if test="y != null" >
+        Y,
+      </if>
+      <if test="usedflag != null" >
+        UsedFlag,
+      </if>
+      <if test="state != null" >
+        State,
+      </if>
+      <if test="creator != null" >
+        Creator,
+      </if>
+      <if test="createtime != null" >
+        CreateTime,
+      </if>
+      <if test="lasteditor != null" >
+        LastEditor,
+      </if>
+      <if test="lastedittime != null" >
+        LastEditTime,
+      </if>
+      <if test="remark != null" >
+        Remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="hostid != null" >
+        #{hostid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        #{port,jdbcType=INTEGER},
+      </if>
+      <if test="chanel != null" >
+        #{chanel,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="x != null" >
+        #{x,jdbcType=REAL},
+      </if>
+      <if test="y != null" >
+        #{y,jdbcType=REAL},
+      </if>
+      <if test="usedflag != null" >
+        #{usedflag,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lasteditor != null" >
+        #{lasteditor,jdbcType=VARCHAR},
+      </if>
+      <if test="lastedittime != null" >
+        #{lastedittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gosun.isap.dao.po.face.CamerasExample" resultType="java.lang.Integer" >
+    select count(*) from Cameras
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update Cameras
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.hostid != null" >
+        HostID = #{record.hostid,jdbcType=INTEGER},
+      </if>
+      <if test="record.name != null" >
+        Name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.code != null" >
+        Code = #{record.code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ip != null" >
+        IP = #{record.ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.port != null" >
+        Port = #{record.port,jdbcType=INTEGER},
+      </if>
+      <if test="record.chanel != null" >
+        Chanel = #{record.chanel,jdbcType=INTEGER},
+      </if>
+      <if test="record.username != null" >
+        UserName = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null" >
+        Password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null" >
+        Address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.x != null" >
+        X = #{record.x,jdbcType=REAL},
+      </if>
+      <if test="record.y != null" >
+        Y = #{record.y,jdbcType=REAL},
+      </if>
+      <if test="record.usedflag != null" >
+        UsedFlag = #{record.usedflag,jdbcType=INTEGER},
+      </if>
+      <if test="record.state != null" >
+        State = #{record.state,jdbcType=INTEGER},
+      </if>
+      <if test="record.creator != null" >
+        Creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null" >
+        CreateTime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lasteditor != null" >
+        LastEditor = #{record.lasteditor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lastedittime != null" >
+        LastEditTime = #{record.lastedittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remark != null" >
+        Remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update Cameras
+    set ID = #{record.id,jdbcType=INTEGER},
+      HostID = #{record.hostid,jdbcType=INTEGER},
+      Name = #{record.name,jdbcType=VARCHAR},
+      Code = #{record.code,jdbcType=VARCHAR},
+      IP = #{record.ip,jdbcType=VARCHAR},
+      Port = #{record.port,jdbcType=INTEGER},
+      Chanel = #{record.chanel,jdbcType=INTEGER},
+      UserName = #{record.username,jdbcType=VARCHAR},
+      Password = #{record.password,jdbcType=VARCHAR},
+      Address = #{record.address,jdbcType=VARCHAR},
+      X = #{record.x,jdbcType=REAL},
+      Y = #{record.y,jdbcType=REAL},
+      UsedFlag = #{record.usedflag,jdbcType=INTEGER},
+      State = #{record.state,jdbcType=INTEGER},
+      Creator = #{record.creator,jdbcType=VARCHAR},
+      CreateTime = #{record.createtime,jdbcType=TIMESTAMP},
+      LastEditor = #{record.lasteditor,jdbcType=VARCHAR},
+      LastEditTime = #{record.lastedittime,jdbcType=TIMESTAMP},
+      Remark = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gosun.isap.dao.po.face.Cameras" >
+    update Cameras
+    <set >
+      <if test="hostid != null" >
+        HostID = #{hostid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        Name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        Code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        IP = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        Port = #{port,jdbcType=INTEGER},
+      </if>
+      <if test="chanel != null" >
+        Chanel = #{chanel,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        UserName = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        Password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        Address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="x != null" >
+        X = #{x,jdbcType=REAL},
+      </if>
+      <if test="y != null" >
+        Y = #{y,jdbcType=REAL},
+      </if>
+      <if test="usedflag != null" >
+        UsedFlag = #{usedflag,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        State = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        Creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lasteditor != null" >
+        LastEditor = #{lasteditor,jdbcType=VARCHAR},
+      </if>
+      <if test="lastedittime != null" >
+        LastEditTime = #{lastedittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        Remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gosun.isap.dao.po.face.Cameras" >
+    update Cameras
+    set HostID = #{hostid,jdbcType=INTEGER},
+      Name = #{name,jdbcType=VARCHAR},
+      Code = #{code,jdbcType=VARCHAR},
+      IP = #{ip,jdbcType=VARCHAR},
+      Port = #{port,jdbcType=INTEGER},
+      Chanel = #{chanel,jdbcType=INTEGER},
+      UserName = #{username,jdbcType=VARCHAR},
+      Password = #{password,jdbcType=VARCHAR},
+      Address = #{address,jdbcType=VARCHAR},
+      X = #{x,jdbcType=REAL},
+      Y = #{y,jdbcType=REAL},
+      UsedFlag = #{usedflag,jdbcType=INTEGER},
+      State = #{state,jdbcType=INTEGER},
+      Creator = #{creator,jdbcType=VARCHAR},
+      CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      LastEditor = #{lasteditor,jdbcType=VARCHAR},
+      LastEditTime = #{lastedittime,jdbcType=TIMESTAMP},
+      Remark = #{remark,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

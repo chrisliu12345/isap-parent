@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.face.customer.HostsMapperCustomer" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.face.Hosts" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="OriganizeID" property="origanizeid" jdbcType="INTEGER" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="Code" property="code" jdbcType="VARCHAR" />
+    <result column="Address" property="address" jdbcType="VARCHAR" />
+    <result column="HostIP" property="hostip" jdbcType="VARCHAR" />
+    <result column="FtpIP" property="ftpip" jdbcType="VARCHAR" />
+    <result column="FtpPort" property="ftpport" jdbcType="INTEGER" />
+    <result column="FtpUserName" property="ftpusername" jdbcType="VARCHAR" />
+    <result column="FtpPassword" property="ftppassword" jdbcType="VARCHAR" />
+    <result column="FileLoad" property="fileload" jdbcType="VARCHAR" />
+    <result column="FileGetType" property="filegettype" jdbcType="INTEGER" />
+    <result column="UsedFlag" property="usedflag" jdbcType="INTEGER" />
+    <result column="State" property="state" jdbcType="INTEGER" />
+    <result column="Creator" property="creator" jdbcType="VARCHAR" />
+    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="LastEditor" property="lasteditor" jdbcType="VARCHAR" />
+    <result column="LastEditTime" property="lastedittime" jdbcType="TIMESTAMP" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List_T1" >
+    T1.ID, T1.OriganizeID, T1.Name, T1.Code, T1.Address, T1.HostIP, T1.FtpIP, T1.FtpPort, 
+    T1.FtpUserName, T1.FtpPassword, T1.FileLoad, T1.FileGetType, T1.UsedFlag, T1.State, T1.Creator, 
+    T1.CreateTime, T1.LastEditor, T1.LastEditTime, T1.Remark
+  </sql>
+  <select id="selectRoleByListGroupID" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select 
+    <include refid="Base_Column_List_T1" />
+    from Hosts as T1
+    left join Hostblacklistgroups as T2 on T1.ID = T2.HostID
+    where T2.BlacklistGroupID = #{listGroupID,jdbcType=INTEGER}
+    group by <include refid="Base_Column_List_T1" />
+  </select>
+  <select id="selectbyRemarkToID" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List_T1" />
+    from Hosts as T1 where Remark = #{remark,jdbcType=VARCHAR}
+  </select>
+</mapper>

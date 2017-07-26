@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.TPlatMapper" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.TPlat" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="vendor_type" property="vendorType" jdbcType="TINYINT" />
+    <result column="access_type" property="accessType" jdbcType="TINYINT" />
+    <result column="access_ip_address" property="accessIpAddress" jdbcType="VARCHAR" />
+    <result column="access_port" property="accessPort" jdbcType="INTEGER" />
+    <result column="login_user" property="loginUser" jdbcType="VARCHAR" />
+    <result column="login_passwd" property="loginPasswd" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, name, vendor_type, access_type, access_ip_address, access_port, login_user, login_passwd, 
+    status, description
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.TPlatExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_plat
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_plat
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_plat
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gosun.isap.dao.po.TPlatExample" >
+    delete from t_plat
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gosun.isap.dao.po.TPlat" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_plat (name, vendor_type, access_type, 
+      access_ip_address, access_port, login_user, 
+      login_passwd, status, description
+      )
+    values (#{name,jdbcType=VARCHAR}, #{vendorType,jdbcType=TINYINT}, #{accessType,jdbcType=TINYINT}, 
+      #{accessIpAddress,jdbcType=VARCHAR}, #{accessPort,jdbcType=INTEGER}, #{loginUser,jdbcType=VARCHAR}, 
+      #{loginPasswd,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{description,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.gosun.isap.dao.po.TPlat" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_plat
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="vendorType != null" >
+        vendor_type,
+      </if>
+      <if test="accessType != null" >
+        access_type,
+      </if>
+      <if test="accessIpAddress != null" >
+        access_ip_address,
+      </if>
+      <if test="accessPort != null" >
+        access_port,
+      </if>
+      <if test="loginUser != null" >
+        login_user,
+      </if>
+      <if test="loginPasswd != null" >
+        login_passwd,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="vendorType != null" >
+        #{vendorType,jdbcType=TINYINT},
+      </if>
+      <if test="accessType != null" >
+        #{accessType,jdbcType=TINYINT},
+      </if>
+      <if test="accessIpAddress != null" >
+        #{accessIpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="accessPort != null" >
+        #{accessPort,jdbcType=INTEGER},
+      </if>
+      <if test="loginUser != null" >
+        #{loginUser,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPasswd != null" >
+        #{loginPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gosun.isap.dao.po.TPlatExample" resultType="java.lang.Integer" >
+    select count(*) from t_plat
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_plat
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.vendorType != null" >
+        vendor_type = #{record.vendorType,jdbcType=TINYINT},
+      </if>
+      <if test="record.accessType != null" >
+        access_type = #{record.accessType,jdbcType=TINYINT},
+      </if>
+      <if test="record.accessIpAddress != null" >
+        access_ip_address = #{record.accessIpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accessPort != null" >
+        access_port = #{record.accessPort,jdbcType=INTEGER},
+      </if>
+      <if test="record.loginUser != null" >
+        login_user = #{record.loginUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginPasswd != null" >
+        login_passwd = #{record.loginPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_plat
+    set id = #{record.id,jdbcType=BIGINT},
+      name = #{record.name,jdbcType=VARCHAR},
+      vendor_type = #{record.vendorType,jdbcType=TINYINT},
+      access_type = #{record.accessType,jdbcType=TINYINT},
+      access_ip_address = #{record.accessIpAddress,jdbcType=VARCHAR},
+      access_port = #{record.accessPort,jdbcType=INTEGER},
+      login_user = #{record.loginUser,jdbcType=VARCHAR},
+      login_passwd = #{record.loginPasswd,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=TINYINT},
+      description = #{record.description,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gosun.isap.dao.po.TPlat" >
+    update t_plat
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="vendorType != null" >
+        vendor_type = #{vendorType,jdbcType=TINYINT},
+      </if>
+      <if test="accessType != null" >
+        access_type = #{accessType,jdbcType=TINYINT},
+      </if>
+      <if test="accessIpAddress != null" >
+        access_ip_address = #{accessIpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="accessPort != null" >
+        access_port = #{accessPort,jdbcType=INTEGER},
+      </if>
+      <if test="loginUser != null" >
+        login_user = #{loginUser,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPasswd != null" >
+        login_passwd = #{loginPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gosun.isap.dao.po.TPlat" >
+    update t_plat
+    set name = #{name,jdbcType=VARCHAR},
+      vendor_type = #{vendorType,jdbcType=TINYINT},
+      access_type = #{accessType,jdbcType=TINYINT},
+      access_ip_address = #{accessIpAddress,jdbcType=VARCHAR},
+      access_port = #{accessPort,jdbcType=INTEGER},
+      login_user = #{loginUser,jdbcType=VARCHAR},
+      login_passwd = #{loginPasswd,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      description = #{description,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

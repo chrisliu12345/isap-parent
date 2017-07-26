@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.customer.TDepartmentMapperCustomer">
+	<resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.TDepartment" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="parent" property="parent" jdbcType="CHAR" />
+    <result column="community_flag" property="communityFlag" jdbcType="TINYINT" />
+    <result column="parent_ids" property="parentIds" jdbcType="VARCHAR" />
+  </resultMap>
+  
+   <!--  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>-->
+  
+  
+	<select id="findChildsByParent" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.customer.TDepartmentCustomer">
+		SELECT * FROM t_department 
+		<where>
+		FIND_IN_SET(#{parent},parent_ids);
+		</where>
+		 
+    </select>
+    
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select parent_ids from t_department 
+		<where>
+			id=#{id};
+		</where>
+	</select>
+	
+	<select id="selectByName" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.customer.TDepartmentCustomer" >
+    select * from t_department
+    <where>
+       name like CONCAT('%',#{name},'%');
+       <!--  name like #{%name%};-->
+    </where>
+  </select>
+  
+  <select id="selectByCommunityFlag" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.customer.TDepartmentCustomer" >
+    select * from t_department
+    <where>
+    community_flag=#{communityflag};
+    </where>
+  </select>
+  
+  
+  
+  <!-- 拓展使用的 -->
+  
+  <!-- <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.TDepartmentExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_department
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select> -->
+  
+	
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.gosun.isap.dao.mapper.customer.TUserDeviceAuthMapperCustomer">
+	<resultMap id="BaseResultMap"
+		type="com.gosun.isap.dao.po.customer.DeviceDevAuthInfo">
+		<id column="devId" property="device.id" jdbcType="CHAR" />
+		<result column="plat_id" property="device.platId" jdbcType="BIGINT" />
+		<result column="code" property="device.code" jdbcType="VARCHAR" />
+		<result column="name" property="device.name" jdbcType="VARCHAR" />
+		<result column="dev_type" property="device.devType" jdbcType="VARCHAR" />
+		<result column="status" property="device.status" jdbcType="TINYINT" />
+		<result column="net_status" property="device.netStatus"
+			jdbcType="TINYINT" />
+		<result column="parent" property="device.parent" jdbcType="CHAR" />
+		<result column="department_id" property="device.departmentId"
+			jdbcType="CHAR" />
+		<result column="location_x" property="device.locationX"
+			jdbcType="VARCHAR" />
+		<result column="location_y" property="device.locationY"
+			jdbcType="VARCHAR" />
+		<result column="brief_name" property="device.briefName"
+			jdbcType="VARCHAR" />
+		<result column="name_spell" property="device.nameSpell"
+			jdbcType="CHAR" />
+		<result column="description" property="device.description"
+			jdbcType="VARCHAR" />
+		<result column="devId" property="devId" jdbcType="CHAR" />
+		<result column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="auth_id" property="authId" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="permission" property="permission" jdbcType="VARCHAR" />
+		<result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="device_Column">
+		c.id, c.plat_id, c.code, c.name, c.dev_type, c.status, c.net_status,
+		c.parent, c.department_id, c.location_x,
+		c.location_y, c.brief_name, c.name_spell, c.description,
+	</sql>
+	<select id="findUserTempDevAuth" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="device_Column" />
+		a.dev_id,a.end_date,a.auth_id,b.name from
+		t_user_device_auth a left
+		join t_dev_authdef b ON b.id=a.dev_id LEFT
+		JOIN t_device c ON
+		c.id=a.dev_id where
+		a.user_id=#{userId}
+	</select>
+</mapper>

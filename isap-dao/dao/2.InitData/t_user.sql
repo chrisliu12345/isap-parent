@@ -1,0 +1,2 @@
+insert into  t_user(id, name, login_name, passwd, status, mobile, email, priority, lock_start_time, lock_end_time) 
+values(1, 'admin', 'admin', '21232F297A57A5A743894A0E4A801FC3', 1, '', '', 1, '2017-5-1 17:22:00', '2017-5-1 17:22:00');

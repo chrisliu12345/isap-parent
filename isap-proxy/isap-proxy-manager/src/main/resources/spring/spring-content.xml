@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd 
+        http://code.alibabatech.com/schema/dubbo        
+		http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+		
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">   
+		<property name="order" value="1" />   
+		<property name="ignoreUnresolvablePlaceholders" value="true" />   
+		<property name="locations">
+			<list>
+				<value>classpath:manager.properties</value>
+				<value>classpath:conn.properties</value>
+		   </list>
+		</property>
+	</bean>
+	
+	<!--zookeeper客户端-->
+	<bean id="zkClient" class="org.I0Itec.zkclient.ZkClient">
+		<!--zookeeper地址-->
+		<constructor-arg index="0" value="${zookeeperAddress}" />
+		<!--session超时时间-->
+		<constructor-arg index="1" value="10000" />
+		<!--连接超时时间-->
+		<constructor-arg index="2" value="10000" />
+	</bean>
+	
+	<!--属性持久化器-->
+	<bean id="propertyPersistence" class="com.gosun.isap.proxy.manager.PropertyPersistenceImpl">
+		<constructor-arg name="homePath" value="/isap/property" />
+		<constructor-arg name="zk" ref="zkClient" />
+	</bean>
+	
+	<!--manager作为server的一个worker-->
+	<bean id="worker" class="com.gosun.isap.proxy.api.utils.support.AbstractWorker">
+		<constructor-arg name="keeperHome" value="/isap/manager"/>
+		<constructor-arg name="zk" ref="zkClient"/>
+	</bean>
+	
+	<!--manager作为proxy的keeper-->
+	<bean id="proxyKeeper" class="com.gosun.isap.proxy.api.utils.support.AbstractWorkerKeeper">
+		<constructor-arg name="keeperHome" value="/isap/instance" />
+		<constructor-arg name="zk" ref="zkClient" />
+	</bean>
+	
+	<!--proxy实例管理器-->
+	<bean id="proxyManager" class="com.gosun.isap.proxy.manager.ProxyManagerImpl" scope="singleton">
+		<constructor-arg name="persistence" ref="propertyPersistence" />
+		<constructor-arg name="keeper" ref="proxyKeeper" />
+		<constructor-arg name="worker" ref="worker" />
+	</bean>
+	
+	<!--proxy实例加载器。注：spring默认是单例模式，需要设置成原型模式-->
+    <bean id="proxyInstanceLoader" class="com.gosun.isap.proxy.manager.ProxyInstanceLoaderImpl" scope="prototype">
+    	<constructor-arg name="proxyStartCmd" value="${proxyStartCmd}" />
+    </bean>
+	
+	<!--导出dubbo服务-->
+	<dubbo:service interface="com.gosun.isap.proxy.api.manager.IProxyManager" ref="proxyManager" protocol="dubbo">
+		<!-- 配置方法的超时时间和重试次数 -->
+		<dubbo:method name="forkProxyInstance" timeout="15000" retries="0" />
+		<dubbo:method name="destroyProxyInstance" timeout="15000" retries="0" />
+	</dubbo:service>  
+
+    
+</beans>

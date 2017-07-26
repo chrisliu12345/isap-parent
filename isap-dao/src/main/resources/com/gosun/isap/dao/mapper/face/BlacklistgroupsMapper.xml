@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.face.BlacklistgroupsMapper" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.face.Blacklistgroups" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ContactID" property="contactid" jdbcType="INTEGER" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="UsedFlag" property="usedflag" jdbcType="INTEGER" />
+    <result column="State" property="state" jdbcType="INTEGER" />
+    <result column="Creator" property="creator" jdbcType="VARCHAR" />
+    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="LastEditor" property="lasteditor" jdbcType="VARCHAR" />
+    <result column="LastEditTime" property="lastedittime" jdbcType="TIMESTAMP" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, ContactID, Name, UsedFlag, State, Creator, CreateTime, LastEditor, LastEditTime, 
+    Remark
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.face.BlacklistgroupsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from BlacklistGroups
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from BlacklistGroups
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from BlacklistGroups
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gosun.isap.dao.po.face.BlacklistgroupsExample" >
+    delete from BlacklistGroups
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gosun.isap.dao.po.face.Blacklistgroups" >
+    insert into BlacklistGroups (ID, ContactID, Name, 
+      UsedFlag, State, Creator, 
+      CreateTime, LastEditor, LastEditTime, 
+      Remark)
+    values (#{id,jdbcType=INTEGER}, #{contactid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{usedflag,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, #{creator,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{lasteditor,jdbcType=VARCHAR}, #{lastedittime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gosun.isap.dao.po.face.Blacklistgroups" >
+    insert into BlacklistGroups
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="contactid != null" >
+        ContactID,
+      </if>
+      <if test="name != null" >
+        Name,
+      </if>
+      <if test="usedflag != null" >
+        UsedFlag,
+      </if>
+      <if test="state != null" >
+        State,
+      </if>
+      <if test="creator != null" >
+        Creator,
+      </if>
+      <if test="createtime != null" >
+        CreateTime,
+      </if>
+      <if test="lasteditor != null" >
+        LastEditor,
+      </if>
+      <if test="lastedittime != null" >
+        LastEditTime,
+      </if>
+      <if test="remark != null" >
+        Remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="contactid != null" >
+        #{contactid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="usedflag != null" >
+        #{usedflag,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lasteditor != null" >
+        #{lasteditor,jdbcType=VARCHAR},
+      </if>
+      <if test="lastedittime != null" >
+        #{lastedittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gosun.isap.dao.po.face.BlacklistgroupsExample" resultType="java.lang.Integer" >
+    select count(*) from BlacklistGroups
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update BlacklistGroups
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.contactid != null" >
+        ContactID = #{record.contactid,jdbcType=INTEGER},
+      </if>
+      <if test="record.name != null" >
+        Name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.usedflag != null" >
+        UsedFlag = #{record.usedflag,jdbcType=INTEGER},
+      </if>
+      <if test="record.state != null" >
+        State = #{record.state,jdbcType=INTEGER},
+      </if>
+      <if test="record.creator != null" >
+        Creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null" >
+        CreateTime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lasteditor != null" >
+        LastEditor = #{record.lasteditor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lastedittime != null" >
+        LastEditTime = #{record.lastedittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remark != null" >
+        Remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update BlacklistGroups
+    set ID = #{record.id,jdbcType=INTEGER},
+      ContactID = #{record.contactid,jdbcType=INTEGER},
+      Name = #{record.name,jdbcType=VARCHAR},
+      UsedFlag = #{record.usedflag,jdbcType=INTEGER},
+      State = #{record.state,jdbcType=INTEGER},
+      Creator = #{record.creator,jdbcType=VARCHAR},
+      CreateTime = #{record.createtime,jdbcType=TIMESTAMP},
+      LastEditor = #{record.lasteditor,jdbcType=VARCHAR},
+      LastEditTime = #{record.lastedittime,jdbcType=TIMESTAMP},
+      Remark = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gosun.isap.dao.po.face.Blacklistgroups" >
+    update BlacklistGroups
+    <set >
+      <if test="contactid != null" >
+        ContactID = #{contactid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        Name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="usedflag != null" >
+        UsedFlag = #{usedflag,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        State = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        Creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lasteditor != null" >
+        LastEditor = #{lasteditor,jdbcType=VARCHAR},
+      </if>
+      <if test="lastedittime != null" >
+        LastEditTime = #{lastedittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        Remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gosun.isap.dao.po.face.Blacklistgroups" >
+    update BlacklistGroups
+    set ContactID = #{contactid,jdbcType=INTEGER},
+      Name = #{name,jdbcType=VARCHAR},
+      UsedFlag = #{usedflag,jdbcType=INTEGER},
+      State = #{state,jdbcType=INTEGER},
+      Creator = #{creator,jdbcType=VARCHAR},
+      CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      LastEditor = #{lasteditor,jdbcType=VARCHAR},
+      LastEditTime = #{lastedittime,jdbcType=TIMESTAMP},
+      Remark = #{remark,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

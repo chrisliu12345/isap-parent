@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.face.customer.ContactsMapperCustomer" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.face.Contacts" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="Password" property="password" jdbcType="VARCHAR" />
+    <result column="ContactName" property="contactname" jdbcType="VARCHAR" />
+    <result column="AlarmValue" property="alarmvalue" jdbcType="DOUBLE" />
+    <result column="RoleID" property="roleid" jdbcType="INTEGER" />
+    <result column="UsedFlag" property="usedflag" jdbcType="INTEGER" />
+    <result column="State" property="state" jdbcType="INTEGER" />
+    <result column="Creator" property="creator" jdbcType="VARCHAR" />
+    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="LastEditor" property="lasteditor" jdbcType="VARCHAR" />
+    <result column="LastEditTime" property="lastedittime" jdbcType="TIMESTAMP" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, Password, ContactName, AlarmValue, RoleID, UsedFlag, State, Creator, CreateTime, 
+    LastEditor, LastEditTime, Remark
+  </sql>
+  <select id="selectByRemark" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from Contacts
+    where Remark = #{remark,jdbcType=VARCHAR}
+  </select>
+</mapper>

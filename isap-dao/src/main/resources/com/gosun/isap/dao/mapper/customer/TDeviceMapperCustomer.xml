@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.customer.TDeviceMapperCustomer" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.TDevice" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="plat_id" property="platId" jdbcType="BIGINT" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="dev_type" property="devType" jdbcType="TINYINT" />
+    <result column="channel_type" property="channelType" jdbcType="INTEGER" />
+    <result column="channel_sub_type" property="channelSubType" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="net_status" property="netStatus" jdbcType="TINYINT" />
+    <result column="parent" property="parent" jdbcType="CHAR" />
+    <result column="department_id" property="departmentId" jdbcType="CHAR" />
+    <result column="location_x" property="locationX" jdbcType="VARCHAR" />
+    <result column="location_y" property="locationY" jdbcType="VARCHAR" />
+    <result column="brief_name" property="briefName" jdbcType="VARCHAR" />
+    <result column="name_spell" property="nameSpell" jdbcType="CHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select *
+    from t_device
+    where name = #{name}
+  </select>
+  
+   <select id="selectnoBranchdevice" resultMap="BaseResultMap"  >
+    select *
+    from t_device
+    where department_id = "1"
+   </select>
+  
+   <select id="selectBranchdevice" resultMap="BaseResultMap" parameterType="java.lang.String"  >
+    select *
+    from t_device
+    where department_id = #{branchid}
+  </select>
+  
+  <update id="updateStatus" parameterType="java.lang.String" >
+        update t_device set department_id = "1" where id =         
+        #{id}
+  </update>
+  
+  
+ <update id="updateDev" parameterType="java.lang.String" >
+        update t_device set name = #{name} ,description = #{description} where id =         
+        #{id}
+ </update>
+ 
+ <update id="updateDevstatus" parameterType="map" >
+        update t_device set status = #{status} where id =         
+        #{id}
+ </update>
+
+ 
+ <update id="updateDevdepartent" parameterType="java.lang.String" >
+        update t_device set department_id = #{departId} where id =         
+        #{id}
+ </update>
+ 
+  </mapper>

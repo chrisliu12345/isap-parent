@@ -1,0 +1,1 @@
+restExceptionFilter=com.gosun.isap.common.filter.RestExceptionFilter

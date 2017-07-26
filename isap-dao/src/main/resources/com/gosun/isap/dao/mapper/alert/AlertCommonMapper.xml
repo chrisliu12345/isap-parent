@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gosun.isap.dao.mapper.alert.AlertCommonMapper">
+    <select id="getUserName" resultType="java.lang.String">
+        select name from t_user where id = #{id}
+    </select>
+
+    <select id="getDeviceDepartment" resultType="java.lang.String">
+        select department_id from t_device where id = #{deviceId}
+    </select>
+    <select id="getAlertDeviceId" resultType="java.lang.String">
+        select dev_id from t_alert where id = #{alertId}
+    </select>
+    <select id="getAlertDepartmentId" resultType="java.lang.String">
+        select department_id from t_alert where id = #{alertId}
+    </select>
+
+    <select id="getLimitTime" resultType="java.lang.Integer">
+        select arrive_time from t_alert_time_limit where dev_id = #{deviceId}
+    </select>
+    <select id="getRoles" resultType="java.lang.Long">
+        select role_id from t_user_belong where user_id = #{userId}
+    </select>
+
+    <select id="getCommunitiesByUser" resultType="java.lang.String">
+        select C.id from
+        (select B.id from
+        (select department_id from t_role_dep AA
+        inner join (select role_id from t_user_belong where user_id = #{userId}) as BB
+        on BB.role_id = AA.role_id) as A
+        left join t_department B
+        on find_in_set(A.department_id,B.parent_ids) or A.department_id = B.id
+        )as C
+        inner join (select distinct department_id from t_device) D
+        on C.id = D.department_id
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+
+    <select id="getDevicesByDepartments" resultType="java.lang.String">
+        select id from t_device
+        <where>
+            <if test="ids == null or ids.size() == 0">
+                and false
+            </if>
+            <if test="ids != null and ids.size() &gt; 0">
+                and department_id in
+                <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+
+    <select id="checkDepartmentRole" resultType="java.lang.Integer">
+        select id from t_role_dep
+        <where>
+            <if test="departmentId != null">
+                department_id = #{departmentId}
+                <if test="ids == null or ids.size() == 0">
+                    and false
+                </if>
+                <if test="ids != null and ids.size() &gt; 0">
+                    and role_id in
+                    <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </if>
+            <if test="departmentId == null">
+                false
+            </if>
+        </where>
+        limit 1
+    </select>
+    <select id="getAllCommunities" resultType="java.lang.String">
+        select distinct department_id from t_device
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+    <select id="getAllDevice" resultType="java.lang.String">
+        select id from t_device
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+    <select id="checkMenuPermission" resultType="java.lang.Long">
+        select id from t_role_menu_auth
+        <where>
+            auth_id = #{menuId}
+            <if test="roleIds == null or roleIds.size() == 0">
+                and false
+            </if>
+            <if test="roleIds != null and roleIds.size() &gt; 0">
+                and role_id in
+                <foreach collection="roleIds" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        limit 1
+    </select>
+    <select id="getChildCommunities" resultType="java.lang.String">
+        select id from t_department where find_in_set(#{parentId},parent_ids) and id in (select distinct department_id
+        from t_device)
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+    <select id="countChildCommunities" resultType="java.lang.Integer">
+        select count(*) from t_department where find_in_set(#{parentId},parent_ids) and id in (select distinct
+        department_id from t_device)
+    </select>
+
+    <select id="getChildDepartmentsByUserId" resultType="java.lang.String">
+        select C.id from
+        t_role_dep A
+        inner join (select role_id from t_user_belong where user_id = userId) as B
+        on B.role_id = A.role_id
+        inner join (select * from t_department where find_in_set(#{parentId},parent_ids)) as C
+        on find_in_set(A.department_id,C.parent_ids)
+        inner join (select distinct department_id from t_device) as D
+        on C.id = D.department_id
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+
+    <select id="countChildDepartmentsByUserId" resultType="int">
+        select count(*) from
+        (select B.id as department_id from
+        (select department_id from t_role_dep where role_id in (select role_id from t_user_belong where user_id =
+        #{userId})) as A
+        left join t_department B
+        on find_in_set(A.department_id,B.parent_ids)
+        )as C
+        where
+        C.department_id in (select distinct department_id from t_device)
+        and
+        C.department_id in (select id from t_department where find_in_set(#{parentId},parent_ids))
+    </select>
+
+    <select id="getDepartmentName" resultType="java.lang.String">
+        select name from t_department where id = #{departmentId}
+    </select>
+    <select id="getParentDepartmentName" resultType="java.lang.String">
+        select name from t_department where id = (select parent from t_department where id = #{departmentId})
+    </select>
+    <select id="getRelationDepartmentCount" resultType="java.lang.Integer">
+        select B.count from (select group_id from t_guard_group_belong where department_id = #{departmentId}) as A
+        right join
+        (select count(*) as count,group_id from t_guard_group_belong group by group_id) as B
+        on A.group_id = B.group_id
+        order by B.count desc limit 1
+    </select>
+    <select id="countDepartmentGuards" resultType="int">
+        select count(*) from t_guard where group_id =
+        (select group_id from t_guard_group_belong where department_id = #{departmentId})
+    </select>
+    <select id="suggestGuardGroup" resultType="java.util.Map">
+        select id,name,description from t_guard_group where name like '%${key}%'
+        union
+        select id,name,description from t_guard_group where description like '%${key}%'
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+    <select id="suggestGuardGroupByDepartment" resultType="java.util.Map">
+        select A.*,C.name as department from (select id,name,description from t_guard_group where id in
+        (select group_id from t_guard_group_belong where department_id in
+        (select id from t_department where name like '%${key}%'))) as A
+        left join
+        t_guard_group_belong B
+        on A.id = B.group_id
+        left join
+        t_department C
+        on B.department_id = C.id
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+    <select id="suggestGuardGroupByChildDep" resultType="java.util.Map">
+        select A.*,concat(D.name,'-',C.name) as department from (select id,name,description from t_guard_group where id
+        in
+        (select group_id from t_guard_group_belong where department_id in(select id from t_department where parent in
+        (select id from t_department where name like '%${key}%') and id != parent))) as A
+        left join
+        t_guard_group_belong B
+        on A.id = B.group_id
+        left join
+        t_department C
+        on B.department_id = C.id
+        left join
+        t_department D
+        on D.id = C.parent
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+    <select id="suggestDepartment" resultType="java.util.Map">
+        select id,name from t_department where name like '%${key}%'
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+    <select id="suggestChildDepartment" resultType="java.util.Map">
+        select A.id,A.name,concat(B.name,'-',A.name) as fullName from
+        (select id,name,parent from t_department where parent in
+        (select id from t_department where name like '%${key}%') and parent != id
+        ) as A
+        left join t_department B
+        on B.id = A.parent
+        <if test="limit != null">
+            limit ${limit.limit}
+        </if>
+    </select>
+    <select id="getMenuId" resultType="java.lang.Long">
+        select id from t_menu_authdef where name = #{name}
+    </select>
+    <select id="getFirstDeviceId" resultType="java.lang.String">
+        select id from t_device where department_id = #{departmentId} limit 1
+    </select>
+    <select id="getFirstChildDepartmentId" resultType="java.lang.String">
+        select id from t_department where parent = #{departmentId} limit 1
+    </select>
+    <select id="getUserDepartments" resultType="java.lang.String">
+        select distinct B.department_id from (select role_id from t_user_belong where user_id = #{userId})  A
+        left join t_role_dep B
+        on B.role_id = A.role_id
+    </select>
+    <select id="hasChildDepartment" resultType="java.lang.String">
+        select C.id from
+        (select role_id from t_user_belong where user_id = #{userId)  A
+        left join t_role_dep B
+        on B.role_id = A.role_id
+        inner join (select * from t_department where id = #{departmentId}) as C
+        on find_in_set(B.department_id,C.parent_ids) or B.department_id = C.id limit 1
+    </select>
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd  
+        http://code.alibabatech.com/schema/dubbo        
+		http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<context:component-scan base-package="com.gosun.isap.proxy.api"></context:component-scan>
+	<context:component-scan base-package="com.gosun.isap.proxy.instance"></context:component-scan>
+	
+	<aop:aspectj-autoproxy/>
+	
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">   
+		<property name="order" value="1" />   
+		<property name="ignoreUnresolvablePlaceholders" value="true" />   
+		<property name="locations">
+			<list>
+				<value>classpath:instance.properties</value>
+				<value>classpath:conn.properties</value>
+		   </list>
+		</property>
+	</bean>
+	
+	<!--zookeeper客户端-->
+	<bean id="zkClient" class="org.I0Itec.zkclient.ZkClient">
+		<!--zookeeper地址-->
+		<constructor-arg index="0" value="${zookeeperAddress}" />
+		<!--session超时时间-->
+		<constructor-arg index="1" value="10000" />
+		<!--连接超时时间-->
+		<constructor-arg index="2" value="10000" />
+	</bean>
+	
+	<!--proxy作为manager的一个worker-->
+	<bean id="worker" class="com.gosun.isap.proxy.api.utils.support.AbstractWorker">
+		<constructor-arg name="keeperHome" value="/isap/instance"/>
+		<constructor-arg name="zk" ref="zkClient"/>
+	</bean>
+	
+	<!--属性监听器-->
+	<bean id="propertyObserver" class="com.gosun.isap.proxy.instance.PropertyObserverImpl">
+		<constructor-arg name="zk" ref="zkClient"/>
+		<constructor-arg name="homePath" value="/isap/property"/>
+	</bean>
+	
+	<!--消息发布器-->
+	<bean id="messagePublisher" class="com.gosun.isap.common.mc.MessagePublisher">
+		<constructor-arg index="0" value="${brokerURL}"/>
+	</bean>
+	
+	<!--sdk调用器-->
+	<bean id="sdkCaller" class="com.gosun.isap.proxy.instance.NativeSdkCallerImpl" scope="singleton">
+		<property name="pictureDirectory" value="${pictureDirectory}" />
+	</bean>
+	
+	<!--事件线程-->
+	<bean id="eventThread" class="com.gosun.isap.proxy.instance.EventThread">
+		<property name="sdk" ref="sdkCaller" />
+		<property name="publisher" ref="messagePublisher" />
+	</bean>
+	
+	<!--proxy实例-->
+	<bean id="proxyInstance" class="com.gosun.isap.proxy.instance.ProxyInstanceImpl" scope="singleton">
+		<constructor-arg name="worker" ref="worker" />
+		<constructor-arg name="sdkCaller" ref="sdkCaller" />
+		<constructor-arg name="eventThread" ref="eventThread" />
+		<constructor-arg name="propertyObserver" ref="propertyObserver" />
+	</bean>
+	
+	<!--sdk适配器-->
+	<bean id="sdkAdapter" class="com.gosun.isap.proxy.instance.SdkAdapterImpl" scope="singleton">
+		<property name="sdk" ref="sdkCaller" />
+	</bean> 
+	
+	<!--导出sdk适配器dubbo服务-->
+	<dubbo:service interface="com.gosun.isap.proxy.api.instance.ISdkAdapter" ref="sdkAdapter" />
+
+</beans>

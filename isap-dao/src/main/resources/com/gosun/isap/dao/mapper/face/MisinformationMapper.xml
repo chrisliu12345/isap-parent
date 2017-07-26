@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.face.MisinformationMapper" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.face.Misinformation" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="listType" property="listtype" jdbcType="INTEGER" />
+    <result column="listFeature" property="listfeature" jdbcType="VARCHAR" />
+    <result column="listFaceURL" property="listfaceurl" jdbcType="VARCHAR" />
+    <result column="faceURL" property="faceurl" jdbcType="VARCHAR" />
+    <result column="backGroundURL" property="backgroundurl" jdbcType="VARCHAR" />
+    <result column="similarity" property="similarity" jdbcType="DOUBLE" />
+    <result column="capFacesTime" property="capfacestime" jdbcType="TIMESTAMP" />
+    <result column="cameraAddress" property="cameraaddress" jdbcType="VARCHAR" />
+    <result column="editTime" property="edittime" jdbcType="TIMESTAMP" />
+    <result column="editor" property="editor" jdbcType="VARCHAR" />
+    <result column="capfaceID" property="capfaceid" jdbcType="INTEGER" />
+    <result column="blacklistID" property="blacklistid" jdbcType="INTEGER" />
+    <result column="editorID" property="editorid" jdbcType="INTEGER" />
+    <result column="departmentName" property="departmentname" jdbcType="VARCHAR" />
+    <result column="departmentID" property="departmentid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, listType, listFeature, listFaceURL, faceURL, backGroundURL, similarity, capFacesTime, 
+    cameraAddress, editTime, editor, capfaceID, blacklistID, editorID, departmentName, 
+    departmentID
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.face.MisinformationExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from Misinformation
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from Misinformation
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from Misinformation
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gosun.isap.dao.po.face.MisinformationExample" >
+    delete from Misinformation
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gosun.isap.dao.po.face.Misinformation" >
+    insert into Misinformation (ID, listType, listFeature, 
+      listFaceURL, faceURL, backGroundURL, 
+      similarity, capFacesTime, cameraAddress, 
+      editTime, editor, capfaceID, 
+      blacklistID, editorID, departmentName, 
+      departmentID)
+    values (#{id,jdbcType=INTEGER}, #{listtype,jdbcType=INTEGER}, #{listfeature,jdbcType=VARCHAR}, 
+      #{listfaceurl,jdbcType=VARCHAR}, #{faceurl,jdbcType=VARCHAR}, #{backgroundurl,jdbcType=VARCHAR}, 
+      #{similarity,jdbcType=DOUBLE}, #{capfacestime,jdbcType=TIMESTAMP}, #{cameraaddress,jdbcType=VARCHAR}, 
+      #{edittime,jdbcType=TIMESTAMP}, #{editor,jdbcType=VARCHAR}, #{capfaceid,jdbcType=INTEGER}, 
+      #{blacklistid,jdbcType=INTEGER}, #{editorid,jdbcType=INTEGER}, #{departmentname,jdbcType=VARCHAR}, 
+      #{departmentid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gosun.isap.dao.po.face.Misinformation" >
+    insert into Misinformation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="listtype != null" >
+        listType,
+      </if>
+      <if test="listfeature != null" >
+        listFeature,
+      </if>
+      <if test="listfaceurl != null" >
+        listFaceURL,
+      </if>
+      <if test="faceurl != null" >
+        faceURL,
+      </if>
+      <if test="backgroundurl != null" >
+        backGroundURL,
+      </if>
+      <if test="similarity != null" >
+        similarity,
+      </if>
+      <if test="capfacestime != null" >
+        capFacesTime,
+      </if>
+      <if test="cameraaddress != null" >
+        cameraAddress,
+      </if>
+      <if test="edittime != null" >
+        editTime,
+      </if>
+      <if test="editor != null" >
+        editor,
+      </if>
+      <if test="capfaceid != null" >
+        capfaceID,
+      </if>
+      <if test="blacklistid != null" >
+        blacklistID,
+      </if>
+      <if test="editorid != null" >
+        editorID,
+      </if>
+      <if test="departmentname != null" >
+        departmentName,
+      </if>
+      <if test="departmentid != null" >
+        departmentID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="listtype != null" >
+        #{listtype,jdbcType=INTEGER},
+      </if>
+      <if test="listfeature != null" >
+        #{listfeature,jdbcType=VARCHAR},
+      </if>
+      <if test="listfaceurl != null" >
+        #{listfaceurl,jdbcType=VARCHAR},
+      </if>
+      <if test="faceurl != null" >
+        #{faceurl,jdbcType=VARCHAR},
+      </if>
+      <if test="backgroundurl != null" >
+        #{backgroundurl,jdbcType=VARCHAR},
+      </if>
+      <if test="similarity != null" >
+        #{similarity,jdbcType=DOUBLE},
+      </if>
+      <if test="capfacestime != null" >
+        #{capfacestime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cameraaddress != null" >
+        #{cameraaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="edittime != null" >
+        #{edittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editor != null" >
+        #{editor,jdbcType=VARCHAR},
+      </if>
+      <if test="capfaceid != null" >
+        #{capfaceid,jdbcType=INTEGER},
+      </if>
+      <if test="blacklistid != null" >
+        #{blacklistid,jdbcType=INTEGER},
+      </if>
+      <if test="editorid != null" >
+        #{editorid,jdbcType=INTEGER},
+      </if>
+      <if test="departmentname != null" >
+        #{departmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentid != null" >
+        #{departmentid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gosun.isap.dao.po.face.MisinformationExample" resultType="java.lang.Integer" >
+    select count(*) from Misinformation
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update Misinformation
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.listtype != null" >
+        listType = #{record.listtype,jdbcType=INTEGER},
+      </if>
+      <if test="record.listfeature != null" >
+        listFeature = #{record.listfeature,jdbcType=VARCHAR},
+      </if>
+      <if test="record.listfaceurl != null" >
+        listFaceURL = #{record.listfaceurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.faceurl != null" >
+        faceURL = #{record.faceurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.backgroundurl != null" >
+        backGroundURL = #{record.backgroundurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.similarity != null" >
+        similarity = #{record.similarity,jdbcType=DOUBLE},
+      </if>
+      <if test="record.capfacestime != null" >
+        capFacesTime = #{record.capfacestime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.cameraaddress != null" >
+        cameraAddress = #{record.cameraaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.edittime != null" >
+        editTime = #{record.edittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.editor != null" >
+        editor = #{record.editor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.capfaceid != null" >
+        capfaceID = #{record.capfaceid,jdbcType=INTEGER},
+      </if>
+      <if test="record.blacklistid != null" >
+        blacklistID = #{record.blacklistid,jdbcType=INTEGER},
+      </if>
+      <if test="record.editorid != null" >
+        editorID = #{record.editorid,jdbcType=INTEGER},
+      </if>
+      <if test="record.departmentname != null" >
+        departmentName = #{record.departmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.departmentid != null" >
+        departmentID = #{record.departmentid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update Misinformation
+    set ID = #{record.id,jdbcType=INTEGER},
+      listType = #{record.listtype,jdbcType=INTEGER},
+      listFeature = #{record.listfeature,jdbcType=VARCHAR},
+      listFaceURL = #{record.listfaceurl,jdbcType=VARCHAR},
+      faceURL = #{record.faceurl,jdbcType=VARCHAR},
+      backGroundURL = #{record.backgroundurl,jdbcType=VARCHAR},
+      similarity = #{record.similarity,jdbcType=DOUBLE},
+      capFacesTime = #{record.capfacestime,jdbcType=TIMESTAMP},
+      cameraAddress = #{record.cameraaddress,jdbcType=VARCHAR},
+      editTime = #{record.edittime,jdbcType=TIMESTAMP},
+      editor = #{record.editor,jdbcType=VARCHAR},
+      capfaceID = #{record.capfaceid,jdbcType=INTEGER},
+      blacklistID = #{record.blacklistid,jdbcType=INTEGER},
+      editorID = #{record.editorid,jdbcType=INTEGER},
+      departmentName = #{record.departmentname,jdbcType=VARCHAR},
+      departmentID = #{record.departmentid,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gosun.isap.dao.po.face.Misinformation" >
+    update Misinformation
+    <set >
+      <if test="listtype != null" >
+        listType = #{listtype,jdbcType=INTEGER},
+      </if>
+      <if test="listfeature != null" >
+        listFeature = #{listfeature,jdbcType=VARCHAR},
+      </if>
+      <if test="listfaceurl != null" >
+        listFaceURL = #{listfaceurl,jdbcType=VARCHAR},
+      </if>
+      <if test="faceurl != null" >
+        faceURL = #{faceurl,jdbcType=VARCHAR},
+      </if>
+      <if test="backgroundurl != null" >
+        backGroundURL = #{backgroundurl,jdbcType=VARCHAR},
+      </if>
+      <if test="similarity != null" >
+        similarity = #{similarity,jdbcType=DOUBLE},
+      </if>
+      <if test="capfacestime != null" >
+        capFacesTime = #{capfacestime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cameraaddress != null" >
+        cameraAddress = #{cameraaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="edittime != null" >
+        editTime = #{edittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editor != null" >
+        editor = #{editor,jdbcType=VARCHAR},
+      </if>
+      <if test="capfaceid != null" >
+        capfaceID = #{capfaceid,jdbcType=INTEGER},
+      </if>
+      <if test="blacklistid != null" >
+        blacklistID = #{blacklistid,jdbcType=INTEGER},
+      </if>
+      <if test="editorid != null" >
+        editorID = #{editorid,jdbcType=INTEGER},
+      </if>
+      <if test="departmentname != null" >
+        departmentName = #{departmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentid != null" >
+        departmentID = #{departmentid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gosun.isap.dao.po.face.Misinformation" >
+    update Misinformation
+    set listType = #{listtype,jdbcType=INTEGER},
+      listFeature = #{listfeature,jdbcType=VARCHAR},
+      listFaceURL = #{listfaceurl,jdbcType=VARCHAR},
+      faceURL = #{faceurl,jdbcType=VARCHAR},
+      backGroundURL = #{backgroundurl,jdbcType=VARCHAR},
+      similarity = #{similarity,jdbcType=DOUBLE},
+      capFacesTime = #{capfacestime,jdbcType=TIMESTAMP},
+      cameraAddress = #{cameraaddress,jdbcType=VARCHAR},
+      editTime = #{edittime,jdbcType=TIMESTAMP},
+      editor = #{editor,jdbcType=VARCHAR},
+      capfaceID = #{capfaceid,jdbcType=INTEGER},
+      blacklistID = #{blacklistid,jdbcType=INTEGER},
+      editorID = #{editorid,jdbcType=INTEGER},
+      departmentName = #{departmentname,jdbcType=VARCHAR},
+      departmentID = #{departmentid,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

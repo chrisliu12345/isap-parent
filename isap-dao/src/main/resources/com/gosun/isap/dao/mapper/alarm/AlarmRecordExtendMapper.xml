@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosun.isap.dao.mapper.alarm.AlarmRecordExtendMapper" >
+  <resultMap id="BaseResultMap" type="com.gosun.isap.dao.po.alarm.AlarmRecordExtend" >
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="dev_id" property="devId" jdbcType="CHAR" />
+    <result column="alarm_type" property="alarmType" jdbcType="BIGINT" />
+    <result column="flag" property="flag" jdbcType="TINYINT" />
+    <result column="alarm_level" property="alarmLevel" jdbcType="TINYINT" />
+    <result column="alarm_time" property="alarmTime" jdbcType="TIMESTAMP" />
+    <result column="alarm_data" property="alarmData" jdbcType="VARCHAR" />
+    <result column="confirm" property="confirm" jdbcType="TINYINT" />
+    <result column="check_user" property="checkUser" jdbcType="VARCHAR" />
+    <result column="check_time" property="checkTime" jdbcType="TIMESTAMP" />
+    <result column="suggestion" property="suggestion" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Example_Where_Clause" >
+    <where >
+      <if test="alarmType != null">
+        and t_alarm_record.alarm_type = #{alarmType}
+      </if>
+      <if test="alarmLevel != null">
+        and t_alarm_record.alarm_level = #{alarmLevel}
+      </if>
+      <if test="alarmConfirm != null">
+        and t_alarm_record.confirm = #{alarmConfirm}
+      </if>
+      <if test="alarmStartTime != null">
+        and t_alarm_record.alarm_time >= #{alarmStartTime}
+      </if>
+      <if test="alarmEndTime != null">
+        and t_alarm_record.alarm_time &lt;= #{alarmEndTime}
+      </if>
+      <if test="fuzzyField != null">
+        <if test="fuzzyValue != null">
+          and ${fuzzyField} like '%${fuzzyValue}%'
+        </if>
+      </if>
+    </where>
+  </sql>
+
+  <sql id="Base_Column_List" >
+    t_alarm_record.id, t_alarm_record.dev_id, t_alarm_record.alarm_type, t_alarm_record.flag, t_alarm_record.alarm_level, 
+    t_alarm_record.alarm_time, t_alarm_record.alarm_data, t_alarm_record.confirm, t_alarm_record.check_user, 
+    t_alarm_record.check_time, t_alarm_record.suggestion, t_device.name
+  </sql>
+
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gosun.isap.dao.po.alarm.AlarmRecordExampleExtend" >
+    select
+    <include refid="Base_Column_List" />
+    from t_alarm_record inner join t_device on t_alarm_record.dev_id = t_device.id
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="countByExample" parameterType="com.gosun.isap.dao.po.alarm.AlarmRecordExampleExtend" resultType="java.lang.Integer" >
+    select count(*) from t_alarm_record inner join t_device on t_alarm_record.dev_id = t_device.id
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  
+</mapper>
